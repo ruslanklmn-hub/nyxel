@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurelia — On-chain yield, reimagined</title>
+<meta name="description" content="Aurelia — a next-generation on-chain yield protocol. Case study by NYXEL.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<style>
+:root{--bg:#0a0705;--ink:#f6efe6;--mut:#a99a86;--gold:#f5a623;--amber:#ffc04d;--vio:#8b5cf6;--line:rgba(255,255,255,.09);
+  --grad:linear-gradient(120deg,#f5a623,#ff7847);}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:'Space Grotesk';letter-spacing:-.02em;line-height:1;font-weight:600}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 30px}
+.grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+#gl{position:fixed;inset:0;z-index:0;width:100vw;height:100vh}
+.veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at 50% 30%,transparent,rgba(10,7,5,.4) 70%)}
+header{position:fixed;top:0;left:0;right:0;z-index:50}
+nav{display:flex;align-items:center;justify-content:space-between;height:80px}
+.brand{font-family:'Space Grotesk';font-weight:700;font-size:20px;letter-spacing:.14em}
+.brand b{color:var(--gold)}
+.navcta{font-family:'Space Grotesk';font-weight:600;font-size:14px;background:var(--grad);color:#1a0f04;padding:11px 22px;border-radius:100px}
+section{position:relative;z-index:2}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.hero .tag{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:30px}
+.hero h1{font-size:clamp(48px,10vw,150px);line-height:.9;letter-spacing:-.03em}
+.hero .line{display:block;overflow:hidden}.hero .line span{display:inline-block}
+.hero p{margin-top:34px;max-width:500px;font-size:19px;color:var(--mut)}
+.hero .cta{margin-top:40px;display:inline-block;font-family:'Space Grotesk';font-weight:600;font-size:16px;background:var(--grad);color:#1a0f04;padding:15px 30px;border-radius:100px}
+.statsec{padding:16vh 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+.stat .n{font-family:'Space Grotesk';font-weight:700;font-size:clamp(42px,6vw,80px);line-height:1}
+.stat .l{color:var(--mut);margin-top:10px;font-size:14px;letter-spacing:.04em}
+.how{padding:20vh 0}
+.how h2{font-size:clamp(32px,5vw,64px);max-width:14ch;margin-bottom:70px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.step{border-top:2px solid rgba(245,166,35,.3);padding-top:24px}
+.step .i{font-family:'Space Grotesk';color:var(--gold);font-weight:700;margin-bottom:14px}
+.step h3{font-size:22px;margin-bottom:10px}.step p{color:var(--mut);font-size:15px}
+.cta-band{padding:22vh 0;text-align:center}
+.cta-band h2{font-size:clamp(40px,8vw,120px);line-height:.95}
+.cta-band a{display:inline-block;margin-top:40px;font-family:'Space Grotesk';font-weight:600;font-size:17px;background:var(--grad);color:#1a0f04;padding:16px 34px;border-radius:100px}
+footer{border-top:1px solid var(--line);padding:36px 0;position:relative;z-index:2;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:13.5px;color:var(--mut)}
+footer a.by{color:var(--ink);border-bottom:1px solid var(--gold)}
+.rise{will-change:transform,opacity}
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas><div class="veil"></div>
+
+<header><div class="wrap"><nav>
+  <div class="brand"><b>◈</b> AURELIA</div>
+  <a class="navcta" href="#">Launch app</a>
+</nav></div></header>
+
+<section class="hero"><div class="wrap">
+  <div class="tag">On-chain yield protocol</div>
+  <h1><span class="line"><span>Yield,</span></span><span class="line"><span class="grad">reimagined.</span></span></h1>
+  <p>Aurelia routes liquidity across chains to capture the best real yield — automatically, transparently, non-custodially.</p>
+  <a class="cta" href="#">Start earning →</a>
+</div></section>
+
+<section class="statsec"><div class="wrap"><div class="stats">
+  <div class="stat rise"><div class="n grad">$<span data-count="1.84">0</span>B</div><div class="l">Total value locked</div></div>
+  <div class="stat rise"><div class="n grad"><span data-count="12.6">0</span>%</div><div class="l">Avg. real APY</div></div>
+  <div class="stat rise"><div class="n grad"><span data-count="9">0</span></div><div class="l">Chains supported</div></div>
+</div></div></section>
+
+<section class="how"><div class="wrap">
+  <h2 class="rise">Real yield, without the babysitting.</h2>
+  <div class="steps">
+    <div class="step rise"><div class="i">01</div><h3>Deposit</h3><p>Bring any major asset. Aurelia handles bridging, routing and rebalancing under the hood.</p></div>
+    <div class="step rise"><div class="i">02</div><h3>Auto-route</h3><p>The protocol continuously moves liquidity to the highest risk-adjusted real yield across 9 chains.</p></div>
+    <div class="step rise"><div class="i">03</div><h3>Earn</h3><p>Withdraw anytime. Non-custodial, audited, and fully on-chain — you always hold the keys.</p></div>
+  </div>
+</div></section>
+
+<section class="cta-band"><div class="wrap">
+  <h2 class="rise">Put your capital<br>to <span class="grad">work.</span></h2>
+  <a href="#">Launch Aurelia →</a>
+</div></section>
+
+<footer><div class="wrap" style="display:flex;justify-content:space-between;width:100%;flex-wrap:wrap;gap:16px">
+  <span>© 2026 Aurelia Protocol · Audited by leading firms</span>
+  <span>Design &amp; build by <a class="by" href="https://nyxel.space">NYXEL</a> ↗</span>
+</div></footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const lenis=new Lenis({lerp:.09}); lenis.on('scroll',ScrollTrigger.update); gsap.ticker.add(t=>lenis.raf(t*1000)); gsap.ticker.lagSmoothing(0);
+
+window.addEventListener('load',()=>{
+  gsap.timeline({defaults:{ease:"power4.out"}})
+    .from(".hero .tag",{yPercent:120,opacity:0,duration:.7})
+    .from(".hero .line span",{yPercent:120,duration:1.1,stagger:.12},"-=.3")
+    .from(".hero p",{y:20,opacity:0,duration:.8},"-=.7")
+    .from(".hero .cta",{y:20,opacity:0,duration:.7},"-=.6");
+});
+gsap.utils.toArray('.rise').forEach(el=>gsap.from(el,{y:60,opacity:0,duration:1,ease:"power3.out",scrollTrigger:{trigger:el,start:"top 88%",once:true}}));
+// count-up stats
+gsap.utils.toArray('[data-count]').forEach(el=>{
+  const end=parseFloat(el.dataset.count), dec=end%1!==0?1:0, o={v:0};
+  gsap.to(o,{v:end,duration:2,ease:"power2.out",scrollTrigger:{trigger:el,start:"top 85%",once:true},onUpdate(){el.textContent=o.v.toFixed(dec);}});
+});
+
+/* WebGL: torus knot (a "yield loop") with fresnel gold glow + gradient field */
+(function(){
+  if(!window.THREE)return; const c=document.getElementById('gl'); let r;
+  try{r=new THREE.WebGLRenderer({canvas:c,alpha:true,antialias:true});}catch(e){return}
+  const LOW=(navigator.hardwareConcurrency||8)<=4;
+  r.setPixelRatio(Math.min(devicePixelRatio,LOW?1.2:1.6)); let w=innerWidth,h=innerHeight; r.setSize(w,h);
+  const sc=new THREE.Scene(), cam=new THREE.PerspectiveCamera(55,w/h,.1,100); cam.position.z=6;
+  const bgU={t:{value:0},res:{value:new THREE.Vector2(w,h)}}, bs=new THREE.Scene(), bc=new THREE.Camera();
+  bs.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),new THREE.ShaderMaterial({uniforms:bgU,depthWrite:false,depthTest:false,
+    vertexShader:"varying vec2 v;void main(){v=uv;gl_Position=vec4(position,1.);}",
+    fragmentShader:"precision highp float;varying vec2 v;uniform float t;uniform vec2 res;void main(){vec2 uv=v;uv.x*=res.x/res.y;float n=sin(uv.x*2.+t*.2)*.5+cos(uv.y*2.4-t*.16)*.5;vec3 c=mix(vec3(.14,.07,.02),vec3(.06,.03,.10),clamp(n*.5+.5,0.,1.));float d=length(v-vec2(.5,.32));c*=mix(1.,.12,smoothstep(.1,.9,d));c+=.008;gl_FragColor=vec4(c,1.);}"})));
+  const fm=new THREE.ShaderMaterial({uniforms:{a:{value:new THREE.Color(0x3a2408)},b:{value:new THREE.Color(0xffcf7a)}},transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,
+    vertexShader:"varying vec3 n;varying vec3 e;void main(){n=normalize(normalMatrix*normal);vec4 m=modelViewMatrix*vec4(position,1.);e=normalize(-m.xyz);gl_Position=projectionMatrix*m;}",
+    fragmentShader:"varying vec3 n;varying vec3 e;uniform vec3 a;uniform vec3 b;void main(){float f=pow(1.-max(dot(n,e),0.),2.2);gl_FragColor=vec4(mix(a,b,f),f*.85+.05);}"});
+  const g=new THREE.Group(); sc.add(g);
+  const knot=new THREE.Mesh(new THREE.TorusKnotGeometry(1.5,.42,LOW?90:180,LOW?12:24),fm); g.add(knot);
+  let mx=0,my=0; addEventListener('mousemove',e=>{mx=e.clientX/w-.5;my=e.clientY/h-.5});
+  addEventListener('resize',()=>{w=innerWidth;h=innerHeight;cam.aspect=w/h;cam.updateProjectionMatrix();r.setSize(w,h);bgU.res.value.set(w,h)});
+  const s={rz:0}; gsap.to(s,{rz:Math.PI*2,ease:"none",scrollTrigger:{trigger:document.body,start:"top top",end:"bottom bottom",scrub:1}});
+  const cl=new THREE.Clock();
+  (function loop(){bgU.t.value=cl.getElapsedTime();knot.rotation.x+=.004;knot.rotation.y+=.006;knot.rotation.z=s.rz;
+    g.rotation.y+=((mx*.4)-g.rotation.y)*.04;g.rotation.x+=((my*.25)-g.rotation.x)*.04;
+    r.autoClear=false;r.clear();r.render(bs,bc);r.render(sc,cam);requestAnimationFrame(loop);})();
+})();
+</script>
+</body>
+</html>
