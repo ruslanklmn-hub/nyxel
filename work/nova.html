@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova — The AI inference layer</title>
+<meta name="description" content="Nova — global, low-latency inference for AI teams. Case study by NYXEL.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<style>
+:root{--bg:#05080f;--ink:#eaf2ff;--mut:#8a9bc0;--blue:#38bdf8;--cyan:#22d3ee;--vio:#7c5cff;--line:rgba(255,255,255,.09);
+  --grad:linear-gradient(120deg,#38bdf8,#7c5cff);}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:'Space Grotesk';letter-spacing:-.02em;line-height:1;font-weight:600}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 30px}
+.grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+#gl{position:fixed;inset:0;z-index:0;width:100vw;height:100vh}
+.veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(circle at 50% 35%,transparent,rgba(5,8,15,.45) 72%)}
+header{position:fixed;top:0;left:0;right:0;z-index:50}
+nav{display:flex;align-items:center;justify-content:space-between;height:80px}
+.brand{font-family:'Space Grotesk';font-weight:700;font-size:20px;letter-spacing:.14em}
+.brand b{color:var(--blue)}
+.navcta{font-family:'Space Grotesk';font-weight:600;font-size:14px;background:var(--grad);color:#04101c;padding:11px 22px;border-radius:100px}
+section{position:relative;z-index:2}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.hero .tag{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:30px}
+.hero h1{font-size:clamp(46px,9vw,140px);line-height:.9;letter-spacing:-.03em}
+.hero .line{display:block;overflow:hidden}.hero .line span{display:inline-block}
+.hero p{margin-top:34px;max-width:520px;font-size:19px;color:var(--mut)}
+.hero .cta{margin-top:40px;display:inline-block;font-family:'Space Grotesk';font-weight:600;font-size:16px;background:var(--grad);color:#04101c;padding:15px 30px;border-radius:100px}
+.statsec{padding:16vh 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+.stat .n{font-family:'Space Grotesk';font-weight:700;font-size:clamp(42px,6vw,80px);line-height:1}
+.stat .l{color:var(--mut);margin-top:10px;font-size:14px;letter-spacing:.04em}
+.how{padding:20vh 0}
+.how h2{font-size:clamp(32px,5vw,64px);max-width:15ch;margin-bottom:70px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.step{border-top:2px solid rgba(56,189,248,.3);padding-top:24px}
+.step .i{font-family:'Space Grotesk';color:var(--blue);font-weight:700;margin-bottom:14px}
+.step h3{font-size:22px;margin-bottom:10px}.step p{color:var(--mut);font-size:15px}
+.cta-band{padding:22vh 0;text-align:center}
+.cta-band h2{font-size:clamp(40px,8vw,120px);line-height:.95}
+.cta-band a{display:inline-block;margin-top:40px;font-family:'Space Grotesk';font-weight:600;font-size:17px;background:var(--grad);color:#04101c;padding:16px 34px;border-radius:100px}
+footer{border-top:1px solid var(--line);padding:36px 0;position:relative;z-index:2;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:13.5px;color:var(--mut)}
+footer a.by{color:var(--ink);border-bottom:1px solid var(--blue)}
+.rise{will-change:transform,opacity}
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas><div class="veil"></div>
+
+<header><div class="wrap"><nav>
+  <div class="brand"><b>✦</b> NOVA</div>
+  <a class="navcta" href="#">Deploy a model</a>
+</nav></div></header>
+
+<section class="hero"><div class="wrap">
+  <div class="tag">AI inference infrastructure</div>
+  <h1><span class="line"><span>Inference at the</span></span><span class="line"><span class="grad">speed of thought.</span></span></h1>
+  <p>Nova serves your models on a global low-latency GPU network. Deploy once, scale to millions of requests, pay per token.</p>
+  <a class="cta" href="#">Start building →</a>
+</div></section>
+
+<section class="statsec"><div class="wrap"><div class="stats">
+  <div class="stat rise"><div class="n grad"><span data-count="42">0</span>ms</div><div class="l">p50 latency</div></div>
+  <div class="stat rise"><div class="n grad"><span data-count="99.99">0</span>%</div><div class="l">Uptime SLA</div></div>
+  <div class="stat rise"><div class="n grad"><span data-count="200">0</span>+</div><div class="l">Models ready to serve</div></div>
+</div></div></section>
+
+<section class="how"><div class="wrap">
+  <h2 class="rise">Ship models, not infrastructure.</h2>
+  <div class="steps">
+    <div class="step rise"><div class="i">01</div><h3>Deploy</h3><p>Push any open or custom model with one command. Nova handles GPUs, autoscaling and routing.</p></div>
+    <div class="step rise"><div class="i">02</div><h3>Scale</h3><p>Traffic spikes to millions of requests? Nova scales to zero and back in seconds — you pay only per token.</p></div>
+    <div class="step rise"><div class="i">03</div><h3>Observe</h3><p>Live latency, cost and quality metrics per model. Full traces, no black boxes.</p></div>
+  </div>
+</div></section>
+
+<section class="cta-band"><div class="wrap">
+  <h2 class="rise">Put your model<br>in <span class="grad">production.</span></h2>
+  <a href="#">Deploy on Nova →</a>
+</div></section>
+
+<footer><div class="wrap" style="display:flex;justify-content:space-between;width:100%;flex-wrap:wrap;gap:16px">
+  <span>© 2026 Nova · SOC 2 Type II · Zero data retention</span>
+  <span>Design &amp; build by <a class="by" href="https://nyxel.space">NYXEL</a> ↗</span>
+</div></footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const lenis=new Lenis({lerp:.09}); lenis.on('scroll',ScrollTrigger.update); gsap.ticker.add(t=>lenis.raf(t*1000)); gsap.ticker.lagSmoothing(0);
+window.addEventListener('load',()=>{
+  gsap.timeline({defaults:{ease:"power4.out"}})
+    .from(".hero .tag",{yPercent:120,opacity:0,duration:.7})
+    .from(".hero .line span",{yPercent:120,duration:1.1,stagger:.12},"-=.3")
+    .from(".hero p",{y:20,opacity:0,duration:.8},"-=.7")
+    .from(".hero .cta",{y:20,opacity:0,duration:.7},"-=.6");
+});
+gsap.utils.toArray('.rise').forEach(el=>gsap.from(el,{y:60,opacity:0,duration:1,ease:"power3.out",scrollTrigger:{trigger:el,start:"top 88%",once:true}}));
+gsap.utils.toArray('[data-count]').forEach(el=>{
+  const end=parseFloat(el.dataset.count), dec=end%1!==0?2:0, o={v:0};
+  gsap.to(o,{v:end,duration:2,ease:"power2.out",scrollTrigger:{trigger:el,start:"top 85%",once:true},onUpdate(){el.textContent=o.v.toFixed(dec);}});
+});
+
+/* WebGL: particle sphere ("neural mesh") + wire icosphere + gradient field */
+(function(){
+  if(!window.THREE)return; const c=document.getElementById('gl'); let r;
+  try{r=new THREE.WebGLRenderer({canvas:c,alpha:true,antialias:true});}catch(e){return}
+  const LOW=(navigator.hardwareConcurrency||8)<=4;
+  r.setPixelRatio(Math.min(devicePixelRatio,LOW?1.2:1.6)); let w=innerWidth,h=innerHeight; r.setSize(w,h);
+  const sc=new THREE.Scene(), cam=new THREE.PerspectiveCamera(55,w/h,.1,100); cam.position.z=6;
+  const bgU={t:{value:0},res:{value:new THREE.Vector2(w,h)}}, bs=new THREE.Scene(), bc=new THREE.Camera();
+  bs.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),new THREE.ShaderMaterial({uniforms:bgU,depthWrite:false,depthTest:false,
+    vertexShader:"varying vec2 v;void main(){v=uv;gl_Position=vec4(position,1.);}",
+    fragmentShader:"precision highp float;varying vec2 v;uniform float t;uniform vec2 res;void main(){vec2 uv=v;uv.x*=res.x/res.y;float n=sin(uv.x*2.+t*.2)*.5+cos(uv.y*2.4-t*.16)*.5;vec3 c=mix(vec3(.03,.09,.18),vec3(.06,.04,.14),clamp(n*.5+.5,0.,1.));float d=length(v-vec2(.5,.35));c*=mix(1.,.12,smoothstep(.1,.9,d));c+=.008;gl_FragColor=vec4(c,1.);}"})));
+
+  const g=new THREE.Group(); sc.add(g);
+  // particle sphere
+  const N=LOW?900:2600, pg=new THREE.BufferGeometry(), pos=new Float32Array(N*3), R=2.1;
+  for(let i=0;i<N;i++){const u=Math.random(),vv=Math.random(),th=2*Math.PI*u,ph=Math.acos(2*vv-1),rr=R*(.92+Math.random()*.12);
+    pos[i*3]=rr*Math.sin(ph)*Math.cos(th);pos[i*3+1]=rr*Math.sin(ph)*Math.sin(th);pos[i*3+2]=rr*Math.cos(ph);}
+  pg.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  g.add(new THREE.Points(pg,new THREE.PointsMaterial({color:0x8ec6ff,size:.028,transparent:true,opacity:.85,blending:THREE.AdditiveBlending,depthWrite:false})));
+  // wire icosphere
+  g.add(new THREE.Mesh(new THREE.IcosahedronGeometry(2.1,2),new THREE.MeshBasicMaterial({color:0x38bdf8,wireframe:true,transparent:true,opacity:.12})));
+
+  let mx=0,my=0; addEventListener('mousemove',e=>{mx=e.clientX/w-.5;my=e.clientY/h-.5});
+  addEventListener('resize',()=>{w=innerWidth;h=innerHeight;cam.aspect=w/h;cam.updateProjectionMatrix();r.setSize(w,h);bgU.res.value.set(w,h)});
+  const s={ry:0}; gsap.to(s,{ry:Math.PI*1.6,ease:"none",scrollTrigger:{trigger:document.body,start:"top top",end:"bottom bottom",scrub:1}});
+  const cl=new THREE.Clock(); let baseY=0;
+  (function loop(){bgU.t.value=cl.getElapsedTime();
+    baseY+=.0018;
+    g.rotation.y=baseY+s.ry+(mx*.4);      // idle spin + scroll + mouse
+    g.rotation.x+=((my*.3)-g.rotation.x)*.04;
+    g.rotation.z=s.ry*.12;
+    r.autoClear=false;r.clear();r.render(bs,bc);r.render(sc,cam);requestAnimationFrame(loop);})();
+})();
+</script>
+</body>
+</html>
