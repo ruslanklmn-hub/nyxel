@@ -190,6 +190,13 @@ footer{border-top:1px solid var(--line);padding:40px 0;position:relative;z-index
   });
 })();
 
+/* ===== magnetic CTA ===== */
+(function(){
+  const cta=document.querySelector('.nav-cta'); if(!cta)return;
+  cta.addEventListener('mousemove',e=>{const r=cta.getBoundingClientRect();gsap.to(cta,{x:(e.clientX-r.left-r.width/2)*.4,y:(e.clientY-r.top-r.height/2)*.6,duration:.4,ease:"power3"})});
+  cta.addEventListener('mouseleave',()=>gsap.to(cta,{x:0,y:0,duration:.6,ease:"elastic.out(1,.4)"}));
+})();
+
 /* ===== Lenis smooth scroll + GSAP ===== */
 gsap.registerPlugin(ScrollTrigger);
 const lenis=new Lenis({lerp:.09,wheelMultiplier:1});
@@ -238,7 +245,8 @@ gsap.from("#contact-h",{scale:.9,opacity:.2,ease:"none",
   if(!window.THREE)return;
   const canvas=document.getElementById('gl'); let renderer;
   try{renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});}catch(e){return}
-  renderer.setPixelRatio(Math.min(devicePixelRatio,1.6));
+  const LOW=(navigator.hardwareConcurrency||8)<=4;   // perf-mode for weak machines
+  renderer.setPixelRatio(Math.min(devicePixelRatio,LOW?1.2:1.6));
   let w=innerWidth,h=innerHeight; renderer.setSize(w,h);
   const scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(56,w/h,.1,100); camera.position.z=5.4;
 
@@ -251,11 +259,14 @@ gsap.from("#contact-h",{scale:.9,opacity:.2,ease:"none",
   const fMat=new THREE.ShaderMaterial({uniforms:{cA:{value:new THREE.Color(0x241b58)},cB:{value:new THREE.Color(0xa9b8ff)}},transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,
     vertexShader:"varying vec3 vN;varying vec3 vV;void main(){vN=normalize(normalMatrix*normal);vec4 mv=modelViewMatrix*vec4(position,1.);vV=normalize(-mv.xyz);gl_Position=projectionMatrix*mv;}",
     fragmentShader:"varying vec3 vN;varying vec3 vV;uniform vec3 cA;uniform vec3 cB;void main(){float f=pow(1.-max(dot(vN,vV),0.),2.4);gl_FragColor=vec4(mix(cA,cB,f),f*.8+.05);}"});
+  const detail=LOW?1:3;
+  const geo=new THREE.IcosahedronGeometry(1.7,detail);
+  const base=Float32Array.from(geo.attributes.position.array);
   const grp=new THREE.Group(); scene.add(grp);
-  const core=new THREE.Mesh(new THREE.IcosahedronGeometry(1.75,1),fMat); grp.add(core);
-  const wire=new THREE.Mesh(new THREE.IcosahedronGeometry(1.78,1),new THREE.MeshBasicMaterial({color:0x7c5cff,wireframe:true,transparent:true,opacity:.18})); grp.add(wire);
+  const core=new THREE.Mesh(geo,fMat); grp.add(core);
+  const wire=new THREE.Mesh(new THREE.IcosahedronGeometry(1.95,1),new THREE.MeshBasicMaterial({color:0x7c5cff,wireframe:true,transparent:true,opacity:.13})); grp.add(wire);
 
-  const PC=800,pg=new THREE.BufferGeometry(),pos=new Float32Array(PC*3);
+  const PC=LOW?280:900,pg=new THREE.BufferGeometry(),pos=new Float32Array(PC*3);
   for(let i=0;i<PC*3;i++)pos[i]=(Math.random()-.5)*22;
   pg.setAttribute('position',new THREE.BufferAttribute(pos,3));
   const pts=new THREE.Points(pg,new THREE.PointsMaterial({color:0x8ea2ff,size:.025,transparent:true,opacity:.6,blending:THREE.AdditiveBlending,depthWrite:false})); scene.add(pts);
@@ -263,15 +274,22 @@ gsap.from("#contact-h",{scale:.9,opacity:.2,ease:"none",
   let mx=0,my=0; addEventListener('mousemove',e=>{mx=e.clientX/w-.5;my=e.clientY/h-.5});
   addEventListener('resize',()=>{w=innerWidth;h=innerHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);bgU.res.value.set(w,h)});
 
-  // scroll-link: push the core deeper + spin as you scroll
-  const sc={z:0,rot:0};
-  gsap.to(sc,{z:2.4,rot:Math.PI*1.4,ease:"none",scrollTrigger:{trigger:document.body,start:"top top",end:"bottom bottom",scrub:1}});
+  // scroll-link: push deeper + spin + shift color as you scroll
+  const sc={z:0,rot:0,amp:.17};
+  gsap.to(sc,{z:2.2,rot:Math.PI*1.4,ease:"none",scrollTrigger:{trigger:document.body,start:"top top",end:"bottom bottom",scrub:1}});
+  gsap.to(fMat.uniforms.cB.value,{r:.13,g:.83,b:.93,ease:"none",scrollTrigger:{trigger:"#contact",start:"top 80%",end:"top 20%",scrub:1}});
 
-  const clock=new THREE.Clock();
+  const posAttr=geo.attributes.position, clock=new THREE.Clock();
   function loop(){
-    bgU.t.value=clock.getElapsedTime();
-    core.rotation.y+=.003; core.rotation.x+=.0018; core.rotation.z=sc.rot;
-    wire.rotation.copy(core.rotation);
+    const t=clock.getElapsedTime(); bgU.t.value=t;
+    if(!LOW){ // morphing "breathing" blob (CPU vertex displacement)
+      for(let i=0;i<posAttr.count;i++){const ix=i*3,x=base[ix],y=base[ix+1],z=base[ix+2];
+        const n=Math.sin(x*1.4+t*.7)*Math.sin(y*1.4+t*.55)*Math.sin(z*1.4+t*.45);
+        const s=1+n*sc.amp; posAttr.array[ix]=x*s;posAttr.array[ix+1]=y*s;posAttr.array[ix+2]=z*s;}
+      posAttr.needsUpdate=true; geo.computeVertexNormals();
+    }
+    core.rotation.y+=.0032; core.rotation.x+=.0018; core.rotation.z=sc.rot;
+    wire.rotation.copy(core.rotation); wire.rotation.z=-sc.rot*.6;
     grp.position.z=-sc.z; pts.rotation.y+=.0003;
     grp.rotation.y+=((mx*.5)-grp.rotation.y)*.04; grp.rotation.x+=((my*.3)-grp.rotation.x)*.04;
     renderer.autoClear=false; renderer.clear();
