@@ -53,7 +53,7 @@ section{position:relative;z-index:2}
 .hero{height:100vh;min-height:640px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center}
 .hero-bg{position:absolute;inset:0;overflow:hidden;z-index:0}
 .hero-bg .img{position:absolute;inset:-6%;background:var(--hero) center/cover;will-change:transform}
-.hero-grad{position:absolute;inset:0;z-index:1;background:radial-gradient(58% 46% at 50% 53%,rgba(8,6,7,.62),rgba(8,6,7,0) 72%),linear-gradient(180deg,rgba(8,6,7,.55) 0%,rgba(8,6,7,.1) 30%,rgba(8,6,7,.3) 60%,rgba(8,6,7,.94) 100%)}
+.hero-grad{position:absolute;inset:0;z-index:1;background:radial-gradient(66% 56% at 50% 46%,rgba(8,6,7,.85),rgba(8,6,7,0) 72%),linear-gradient(180deg,rgba(8,6,7,.6) 0%,rgba(8,6,7,.1) 30%,rgba(8,6,7,.3) 60%,rgba(8,6,7,.94) 100%)}
 .hero-in{position:relative;z-index:2;padding:0 24px;will-change:transform}
 .hero-in .eyebrow{display:block;margin-bottom:30px;opacity:0}
 .hero-in h1{font-size:clamp(66px,15vw,220px);font-weight:300;letter-spacing:.02em}
@@ -99,6 +99,7 @@ section{position:relative;z-index:2}
 .craft-in{display:grid;grid-template-columns:1.05fr .95fr;gap:76px;align-items:center}
 .craft .pic{aspect-ratio:4/5;background:var(--velvet) center/cover;position:relative;overflow:hidden}
 .craft .pic .ip{position:absolute;inset:0;background:var(--velvet) center/cover;will-change:transform}
+.craft .pic::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(0deg,rgba(8,6,7,.74) 0%,rgba(8,6,7,.18) 30%,transparent 52%),radial-gradient(120% 100% at 50% 34%,transparent 55%,rgba(8,6,7,.5))}
 .craft .eyebrow{display:block;margin-bottom:26px}
 .craft h2{font-size:clamp(38px,4.8vw,72px);font-weight:400;margin-bottom:26px;line-height:1.05}
 .craft h2 em{font-style:italic;color:var(--gold)}
@@ -109,8 +110,8 @@ section{position:relative;z-index:2}
 .spec .row .v{font-family:'Cormorant Garamond';font-style:italic;font-size:22px;color:var(--ink)}
 /* cta */
 .cta{height:100vh;min-height:560px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center}
-.cta .bg{position:absolute;inset:-8%;background:var(--hero) center/cover;filter:brightness(.4) saturate(.9);will-change:transform;z-index:0}
-.cta .ov{position:absolute;inset:0;z-index:1;background:radial-gradient(80% 80% at 50% 50%,rgba(8,6,7,.2),rgba(8,6,7,.86))}
+.cta .bg{position:absolute;inset:-8%;background:var(--hero) center/cover;filter:brightness(.26) saturate(.8);will-change:transform;z-index:0}
+.cta .ov{position:absolute;inset:0;z-index:1;background:radial-gradient(72% 68% at 50% 50%,rgba(8,6,7,.5),rgba(8,6,7,.94))}
 .cta .in{position:relative;z-index:2}
 .cta h2{font-size:clamp(52px,10vw,150px);font-weight:300;letter-spacing:.02em}
 .cta h2 em{font-style:italic;color:var(--gold)}
@@ -196,13 +197,6 @@ footer .by{color:var(--ink);border-bottom:1px solid var(--gold);padding-bottom:2
       </div>
     </div>
   </div>
-</section>
-
-<section class="band amber right"><div class="bg"></div><div class="ov"></div>
-  <div class="wrap"><div class="cap">
-    <span class="eyebrow">Concentration — Extrait 24%</span>
-    <h2>Worn close.<br>Remembered <em>long.</em></h2>
-  </div></div>
 </section>
 
 <section class="craft"><div class="wrap"><div class="craft-in">
