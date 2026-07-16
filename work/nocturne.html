@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nocturne — Extrait de Parfum</title>
+<meta name="description" content="Maison Nocturne — a nocturnal extrait de parfum. An immersive brand experience designed & built by NYXEL.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<style>
+:root{
+  --bg:#080607; --ink:#efe7d8; --mut:#9c9081; --gold:#c6a15b; --amber:#e6c081; --wine:#7d1f2b;
+  --line:rgba(233,220,196,.14);
+  --hero:url("https://images.unsplash.com/photo-1772191399367-91ed8d95664b?w=2200&q=80&auto=format&fit=crop");
+  --top:url("https://images.unsplash.com/photo-1680474569812-552b793eb21f?w=1600&q=80&auto=format&fit=crop");
+  --heart:url("https://images.unsplash.com/photo-1707317061323-d7967684713c?w=1600&q=80&auto=format&fit=crop");
+  --base:url("https://images.unsplash.com/photo-1628709353367-35f0bb07413d?w=1600&q=80&auto=format&fit=crop");
+  --amberimg:url("https://images.unsplash.com/photo-1771762013405-ad64577dfc55?w=1900&q=80&auto=format&fit=crop");
+  --velvet:url("https://images.unsplash.com/photo-1774682060997-f8959850a7d4?w=1500&q=80&auto=format&fit=crop");
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--gold);color:#1a1206}
+h1,h2,h3,.serif{font-family:'Cormorant Garamond',serif;font-weight:400;letter-spacing:.005em;line-height:1}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1240px;margin:0 auto;padding:0 40px}
+.eyebrow{font-family:'Inter';font-size:11.5px;letter-spacing:.42em;text-transform:uppercase;color:var(--gold)}
+.mut{color:var(--mut)}
+/* film overlays */
+.vig{position:fixed;inset:0;z-index:80;pointer-events:none;background:radial-gradient(125% 105% at 50% 38%,transparent 52%,rgba(0,0,0,.6))}
+.grain{position:fixed;inset:-50%;z-index:81;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  animation:grain 6s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-6%,3%)}40%{transform:translate(4%,-5%)}60%{transform:translate(-3%,4%)}80%{transform:translate(5%,2%)}100%{transform:translate(0,0)}}
+/* loader */
+#load{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:22px}
+#load .lw{font-family:'Cormorant Garamond';font-weight:300;font-size:clamp(40px,7vw,84px);letter-spacing:.28em;text-indent:.28em;color:var(--ink);opacity:0}
+#load .lb{width:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+/* header */
+header{position:fixed;top:0;left:0;right:0;z-index:70;transition:background .4s,backdrop-filter .4s}
+header.scrolled{background:rgba(8,6,7,.72);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;height:86px}
+.brand{display:flex;align-items:center;gap:12px;font-family:'Cormorant Garamond';font-weight:500;font-size:23px;letter-spacing:.34em;text-indent:.34em}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--amber),var(--gold) 60%,#6b4a12);box-shadow:0 0 14px rgba(198,161,91,.7);text-indent:0}
+.nlink{font-family:'Inter';font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--mut);border-bottom:1px solid transparent;padding-bottom:3px;transition:.3s}
+.nlink:hover{color:var(--ink);border-color:var(--gold)}
+section{position:relative;z-index:2}
+/* hero */
+.hero{height:100vh;min-height:640px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center}
+.hero-bg{position:absolute;inset:0;overflow:hidden;z-index:0}
+.hero-bg .img{position:absolute;inset:-6%;background:var(--hero) center/cover;will-change:transform}
+.hero-grad{position:absolute;inset:0;z-index:1;background:radial-gradient(58% 46% at 50% 53%,rgba(8,6,7,.62),rgba(8,6,7,0) 72%),linear-gradient(180deg,rgba(8,6,7,.55) 0%,rgba(8,6,7,.1) 30%,rgba(8,6,7,.3) 60%,rgba(8,6,7,.94) 100%)}
+.hero-in{position:relative;z-index:2;padding:0 24px;will-change:transform}
+.hero-in .eyebrow{display:block;margin-bottom:30px;opacity:0}
+.hero-in h1{font-size:clamp(66px,15vw,220px);font-weight:300;letter-spacing:.02em}
+.hero-in h1 .c{display:inline-block;opacity:0;transform:translateY(40px);will-change:transform,opacity}
+.hero-in .sub{margin-top:26px;font-family:'Cormorant Garamond';font-style:italic;font-weight:300;font-size:clamp(20px,3vw,34px);color:var(--ink);opacity:0}
+.cue{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);z-index:3;font-family:'Inter';font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:12px;opacity:0}
+.cue i{width:1px;height:52px;background:linear-gradient(var(--gold),transparent);display:block;transform-origin:top;animation:cue 2.4s ease-in-out infinite}
+@keyframes cue{0%,100%{transform:scaleY(.35);opacity:.4}50%{transform:scaleY(1);opacity:1}}
+/* manifesto */
+.manifesto{padding:34vh 0;text-align:center}
+.manifesto p{font-family:'Cormorant Garamond';font-weight:300;font-size:clamp(32px,5.6vw,80px);line-height:1.12;max-width:19ch;margin:0 auto}
+.manifesto .w{display:inline-block;opacity:.12;transition:opacity .1s}
+.manifesto .g{font-style:italic;color:var(--gold)}
+/* notes (pinned crossfade) */
+.notes{position:relative;border-top:1px solid var(--line)}
+.notes-in{display:flex;align-items:flex-start;max-width:1400px;margin:0 auto}
+.notes-visual{position:sticky;top:0;height:100vh;flex:1 1 50%;overflow:hidden}
+.nv{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;will-change:transform,opacity}
+.nv.v0{background-image:var(--top)} .nv.v1{background-image:var(--heart)} .nv.v2{background-image:var(--base)}
+.notes-visual .vgrad{position:absolute;inset:0;z-index:3;background:linear-gradient(90deg,transparent,rgba(8,6,7,.35)),linear-gradient(0deg,rgba(8,6,7,.5),transparent 40%)}
+.nlabel{position:absolute;left:44px;bottom:40px;z-index:4}
+.nlabel .idx{font-family:'Cormorant Garamond';font-size:82px;font-weight:300;line-height:.8;color:var(--gold);opacity:.9}
+.nlabel .nm{font-family:'Inter';font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--ink);margin-top:8px}
+.notes-copy{flex:1 1 50%}
+.note{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 8vw 0 6vw}
+.note .k{font-family:'Inter';font-size:11px;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:22px}
+.note h3{font-size:clamp(38px,4.4vw,66px);font-weight:400;margin-bottom:20px}
+.note h3 em{font-style:italic;color:var(--amber)}
+.note p{color:var(--mut);font-size:16.5px;max-width:34ch}
+.note .ing{margin-top:26px;font-family:'Cormorant Garamond';font-style:italic;font-size:22px;color:var(--ink);border-top:1px solid var(--line);padding-top:20px}
+/* full-bleed band */
+.band{height:118vh;position:relative;overflow:hidden;display:flex;align-items:center}
+.band .bg{position:absolute;inset:-12% 0;background-size:cover;background-position:center;will-change:transform;z-index:0}
+.band.amber .bg{background-image:var(--amberimg)} .band.rose .bg{background-image:var(--heart)}
+.band .ov{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(8,6,7,.7),rgba(8,6,7,.2) 55%,rgba(8,6,7,.55))}
+.band .cap{position:relative;z-index:2;max-width:520px}
+.band .cap .eyebrow{display:block;margin-bottom:20px}
+.band .cap h2{font-size:clamp(40px,6vw,92px);font-weight:300}
+.band .cap h2 em{font-style:italic;color:var(--amber)}
+.band.right{justify-content:flex-end;text-align:right}
+/* craft split */
+.craft{padding:22vh 0}
+.craft-in{display:grid;grid-template-columns:1.05fr .95fr;gap:76px;align-items:center}
+.craft .pic{aspect-ratio:4/5;background:var(--velvet) center/cover;position:relative;overflow:hidden}
+.craft .pic .ip{position:absolute;inset:0;background:var(--velvet) center/cover;will-change:transform}
+.craft .eyebrow{display:block;margin-bottom:26px}
+.craft h2{font-size:clamp(38px,4.8vw,72px);font-weight:400;margin-bottom:26px;line-height:1.05}
+.craft h2 em{font-style:italic;color:var(--gold)}
+.craft .lede{color:var(--mut);font-size:17px;max-width:42ch;margin-bottom:38px}
+.spec{border-top:1px solid var(--line)}
+.spec .row{display:flex;justify-content:space-between;gap:20px;padding:17px 2px;border-bottom:1px solid var(--line)}
+.spec .row .l{font-family:'Inter';font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--mut)}
+.spec .row .v{font-family:'Cormorant Garamond';font-style:italic;font-size:22px;color:var(--ink)}
+/* cta */
+.cta{height:100vh;min-height:560px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center}
+.cta .bg{position:absolute;inset:-8%;background:var(--hero) center/cover;filter:brightness(.4) saturate(.9);will-change:transform;z-index:0}
+.cta .ov{position:absolute;inset:0;z-index:1;background:radial-gradient(80% 80% at 50% 50%,rgba(8,6,7,.2),rgba(8,6,7,.86))}
+.cta .in{position:relative;z-index:2}
+.cta h2{font-size:clamp(52px,10vw,150px);font-weight:300;letter-spacing:.02em}
+.cta h2 em{font-style:italic;color:var(--gold)}
+.magnet{display:inline-block;margin-top:44px;position:relative}
+.magnet a{display:inline-block;font-family:'Inter';font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink);border:1px solid var(--gold);border-radius:100px;padding:18px 40px;transition:background .4s,color .4s;will-change:transform}
+.magnet a:hover{background:var(--gold);color:#1a1206}
+/* footer */
+footer{border-top:1px solid var(--line);padding:44px 0;position:relative;z-index:2}
+footer .fin{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--mut)}
+footer .by{color:var(--ink);border-bottom:1px solid var(--gold);padding-bottom:2px}
+/* sound */
+#sound{position:fixed;right:26px;bottom:24px;z-index:90;display:flex;align-items:center;gap:10px;cursor:pointer;
+  font-family:'Inter';font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--mut);
+  background:rgba(8,6,7,.5);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:100px;padding:10px 16px;transition:.3s}
+#sound:hover{color:var(--ink);border-color:var(--gold)}
+#sound .eq{display:flex;align-items:flex-end;gap:2px;height:13px}
+#sound .eq b{width:2px;height:4px;background:var(--gold);display:block}
+#sound.on .eq b{animation:eq .9s ease-in-out infinite}
+#sound.on .eq b:nth-child(2){animation-delay:.2s}#sound.on .eq b:nth-child(3){animation-delay:.4s}#sound.on .eq b:nth-child(4){animation-delay:.15s}
+@keyframes eq{0%,100%{height:3px}50%{height:13px}}
+@media(max-width:900px){
+  .wrap{padding:0 24px}
+  .notes-in{flex-direction:column}
+  .notes-visual{flex-basis:auto;width:100%;height:58vh;top:0}
+  .note{min-height:78vh;padding:0 24px}
+  .nlabel{left:24px;bottom:24px}.nlabel .idx{font-size:60px}
+  .craft-in{grid-template-columns:1fr;gap:40px}
+  .band .cap{max-width:none}
+  .band.right{text-align:left;justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+<div class="vig"></div><div class="grain"></div>
+
+<div id="load"><div class="lw">NOCTURNE</div><div class="lb"></div></div>
+
+<header><div class="wrap"><nav>
+  <div class="brand"><span class="dot"></span>NOCTURNE</div>
+  <a class="nlink" href="#collection">The Collection</a>
+</nav></div></header>
+
+<section class="hero">
+  <div class="hero-bg"><div class="img"></div></div>
+  <div class="hero-grad"></div>
+  <div class="hero-in">
+    <span class="eyebrow">Maison Nocturne — Extrait de Parfum</span>
+    <h1 id="htitle">Nocturne</h1>
+    <div class="sub">The dark hour, bottled.</div>
+  </div>
+  <div class="cue">Scroll to enter<i></i></div>
+</section>
+
+<section class="manifesto"><div class="wrap">
+  <p id="mani">Perfume is the most intimate <span class="g">form of memory.</span></p>
+</div></section>
+
+<section class="notes" id="collection">
+  <div class="notes-in">
+    <div class="notes-visual">
+      <div class="nv v0"></div><div class="nv v1"></div><div class="nv v2"></div>
+      <div class="vgrad"></div>
+      <div class="nlabel"><div class="idx" id="nidx">I</div><div class="nm" id="nnm">Tête · Top</div></div>
+    </div>
+    <div class="notes-copy">
+      <div class="note">
+        <div class="k">Tête — The Opening</div>
+        <h3>A first breath of <em>cold light.</em></h3>
+        <p>The hour turns. Bergamot cracks against pink pepper; saffron smoulders underneath — bright, metallic, alive.</p>
+        <div class="ing">Calabrian Bergamot · Pink Pepper · Saffron</div>
+      </div>
+      <div class="note">
+        <div class="k">Cœur — The Heart</div>
+        <h3>Then the <em>bloom</em> arrives.</h3>
+        <p>At the centre, a single damask rose opens in the dark, wrapped in orris and the narcotic hush of jasmine sambac.</p>
+        <div class="ing">Damask Rose · Orris · Jasmine Sambac</div>
+      </div>
+      <div class="note">
+        <div class="k">Fond — The Base</div>
+        <h3>And it stays until <em>morning.</em></h3>
+        <p>What remains is warmth on skin — oud and amber over vanilla bourbon and sandalwood, low and unhurried.</p>
+        <div class="ing">Oud · Amber · Vanilla Bourbon · Sandalwood</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band amber right"><div class="bg"></div><div class="ov"></div>
+  <div class="wrap"><div class="cap">
+    <span class="eyebrow">Concentration — Extrait 24%</span>
+    <h2>Worn close.<br>Remembered <em>long.</em></h2>
+  </div></div>
+</section>
+
+<section class="craft"><div class="wrap"><div class="craft-in">
+  <div class="pic"><div class="ip"></div></div>
+  <div class="ctext">
+    <span class="eyebrow">The Making</span>
+    <h2>Composed in Grasse.<br>Bottled by <em>candlelight.</em></h2>
+    <p class="lede">Each flacon is macerated for ninety days, hand-filled, wax-sealed and numbered. Nothing about it is quick — and that is the point.</p>
+    <div class="spec">
+      <div class="row"><span class="l">Concentration</span><span class="v">Extrait — 24%</span></div>
+      <div class="row"><span class="l">Maturation</span><span class="v">90 days in oak</span></div>
+      <div class="row"><span class="l">Edition</span><span class="v">500 numbered flacons</span></div>
+      <div class="row"><span class="l">Origin</span><span class="v">Grasse, France</span></div>
+    </div>
+  </div>
+</div></div></section>
+
+<section class="cta"><div class="bg"></div><div class="ov"></div>
+  <div class="in">
+    <h2>Enter the <em>hour.</em></h2>
+    <span class="magnet"><a href="#" id="mag">Discover the Maison</a></span>
+  </div>
+</section>
+
+<footer><div class="wrap"><div class="fin">
+  <span>© 2026 Maison Nocturne — Extrait de Parfum</span>
+  <span>Experience &amp; build by <a class="by" href="https://nyxel.space" target="_blank" rel="noopener">NYXEL</a> ↗</span>
+</div></div></footer>
+
+<div id="sound"><span class="eq"><b></b><b></b><b></b><b></b></span><span id="stxt">Ambience</span></div>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const LOW=(navigator.hardwareConcurrency||8)<=4;
+const lenis=new Lenis({lerp:LOW?.12:.09}); lenis.on('scroll',ScrollTrigger.update); gsap.ticker.add(t=>lenis.raf(t*1000)); gsap.ticker.lagSmoothing(0);
+
+/* split hero title into chars */
+(function(){const el=document.getElementById('htitle');const t=el.textContent;el.innerHTML=t.split('').map(c=>`<span class="c">${c}</span>`).join('');})();
+/* split manifesto (keep the gold span) into words */
+(function(){const el=document.getElementById('mani');
+  el.querySelectorAll('span,#mani').forEach(()=>{});
+  const walk=n=>{const out=[];n.childNodes.forEach(node=>{
+    if(node.nodeType===3){node.textContent.split(/(\s+)/).forEach(w=>{if(w.trim()){const s=document.createElement('span');s.className='w';s.textContent=w;out.push(s);}else if(w){out.push(document.createTextNode(w));}});}
+    else{node.classList.add('w');out.push(node);}});
+  n.innerHTML='';out.forEach(o=>n.appendChild(o));};
+  walk(el);
+})();
+
+/* header bg on scroll */
+ScrollTrigger.create({start:'top -60',onUpdate:s=>document.querySelector('header').classList.toggle('scrolled',s.scroll()>60)});
+
+/* loader → hero reveal — robust: runs even if 'load' already fired, and can never trap the page behind the overlay */
+function nyxIntro(){
+  if(window.__nyxIntro)return; window.__nyxIntro=1;
+  gsap.timeline()
+    .to('#load .lw',{opacity:1,duration:.9,ease:'power2.out'})
+    .to('#load .lb',{width:'min(420px,60vw)',duration:1,ease:'power2.inOut'},'-=.5')
+    .to('#load',{yPercent:-100,duration:.9,ease:'power4.inOut'},'+=.35')
+    .add(()=>{const l=document.getElementById('load');if(l)l.style.display='none';})
+    .from('.hero-bg .img',{scale:1.25,duration:1.6,ease:'power3.out'},'-=.8')
+    .to('.hero-in .eyebrow',{opacity:1,y:0,duration:.8,ease:'power2.out'},'-=1')
+    .to('.hero-in h1 .c',{opacity:1,y:0,duration:1,stagger:.05,ease:'power4.out'},'-=.7')
+    .to('.hero-in .sub',{opacity:1,duration:.9,ease:'power2.out'},'-=.5')
+    .to('.cue',{opacity:1,duration:.8},'-=.4');
+  gsap.to('.hero-bg .img',{scale:1.16,duration:LOW?24:18,ease:'sine.inOut',repeat:-1,yoyo:true,delay:2.2});
+}
+function nyxReveal(){ /* instant, ticker-independent safety net */
+  const l=document.getElementById('load'); if(l)l.style.display='none';
+  gsap.set(['.hero-in .eyebrow','.hero-in h1 .c','.hero-in .sub','.cue'],{opacity:1,y:0});
+}
+if(document.readyState==='complete') nyxIntro(); else window.addEventListener('load',nyxIntro);
+/* if rAF/ticker is ever stalled (deep-background tab) the intro can't advance — never leave the overlay covering the page */
+setTimeout(()=>{const l=document.getElementById('load'); if(l && getComputedStyle(l).display!=='none') nyxReveal();}, 4200);
+
+/* hero parallax */
+gsap.to('.hero-in',{yPercent:-24,opacity:.15,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+gsap.to('.hero-bg',{yPercent:14,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+
+/* manifesto word illumination */
+gsap.to('.manifesto .w',{opacity:1,stagger:.12,ease:'none',scrollTrigger:{trigger:'.manifesto',start:'top 72%',end:'bottom 72%',scrub:.6}});
+
+/* NOTES pinned crossfade */
+(function(){
+  const vis=gsap.utils.toArray('.nv'), idxEl=document.getElementById('nidx'), nmEl=document.getElementById('nnm');
+  const R=['I','II','III'], NM=['Tête · Top','Cœur · Heart','Fond · Base'];
+  gsap.set(vis[0],{opacity:1});
+  let cur=0;
+  vis.forEach(v=>gsap.to(v,{scale:1.08,ease:'none',scrollTrigger:{trigger:'.notes',start:'top top',end:'bottom bottom',scrub:true}}));
+  ScrollTrigger.create({trigger:'.notes',start:'top top',end:'bottom bottom',
+    onUpdate(self){
+      const i=Math.min(2,Math.floor(self.progress*3+.00001));
+      if(i!==cur){cur=i;
+        vis.forEach((v,k)=>gsap.to(v,{opacity:k===i?1:0,duration:.6,ease:'power2.out',overwrite:'auto'}));
+        gsap.fromTo(idxEl,{opacity:0,y:14},{opacity:.9,y:0,duration:.5}); idxEl.textContent=R[i];
+        gsap.fromTo(nmEl,{opacity:0},{opacity:1,duration:.6,delay:.05}); nmEl.textContent=NM[i];
+      }
+    }});
+  // note text reveal
+  gsap.utils.toArray('.note').forEach(n=>{
+    gsap.from(n.children,{y:40,opacity:0,duration:.9,stagger:.08,ease:'power3.out',scrollTrigger:{trigger:n,start:'top 68%',once:true}});
+  });
+})();
+
+/* full-bleed band parallax + caption */
+gsap.utils.toArray('.band').forEach(b=>{
+  gsap.fromTo(b.querySelector('.bg'),{yPercent:-8},{yPercent:8,ease:'none',scrollTrigger:{trigger:b,start:'top bottom',end:'bottom top',scrub:true}});
+  gsap.from(b.querySelector('.cap'),{y:60,opacity:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:b,start:'top 62%',once:true}});
+});
+
+/* craft */
+gsap.fromTo('.craft .ip',{scale:1.2},{scale:1,ease:'none',scrollTrigger:{trigger:'.craft',start:'top bottom',end:'bottom top',scrub:true}});
+gsap.from('.craft .ctext > *',{y:44,opacity:0,duration:.9,stagger:.09,ease:'power3.out',scrollTrigger:{trigger:'.craft',start:'top 62%',once:true}});
+gsap.from('.craft .pic',{clipPath:'inset(14% 14% 14% 14%)',opacity:.4,duration:1.2,ease:'power3.out',scrollTrigger:{trigger:'.craft',start:'top 68%',once:true}});
+
+/* cta */
+gsap.fromTo('.cta .bg',{scale:1.18},{scale:1,ease:'none',scrollTrigger:{trigger:'.cta',start:'top bottom',end:'bottom top',scrub:true}});
+gsap.from('.cta h2',{y:60,opacity:0,duration:1.1,ease:'power4.out',scrollTrigger:{trigger:'.cta',start:'top 60%',once:true}});
+gsap.from('.magnet',{y:30,opacity:0,duration:.9,delay:.2,ease:'power2.out',scrollTrigger:{trigger:'.cta',start:'top 60%',once:true}});
+
+/* magnetic button */
+(function(){const m=document.getElementById('mag');const wrap=m.parentElement;
+  wrap.addEventListener('mousemove',e=>{const r=wrap.getBoundingClientRect();const x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;gsap.to(m,{x:x*.4,y:y*.5,duration:.5,ease:'power3.out'});});
+  wrap.addEventListener('mouseleave',()=>gsap.to(m,{x:0,y:0,duration:.6,ease:'elastic.out(1,.4)'}));
+})();
+
+/* WebAudio ambient — synthesised, plays only on user toggle */
+(function(){
+  const btn=document.getElementById('sound'), txt=document.getElementById('stxt');
+  let AC,master,started=false;
+  function build(){
+    AC=new (window.AudioContext||window.webkitAudioContext)();
+    master=AC.createGain();master.gain.value=0;master.connect(AC.destination);
+    const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=760;lp.Q.value=.6;lp.connect(master);
+    const freqs=[110,164.81,220,329.63];
+    freqs.forEach((f,i)=>{
+      const o=AC.createOscillator();o.type=i%2?'sine':'triangle';o.frequency.value=f;
+      const g=AC.createGain();g.gain.value=(i===0?.6:.24)/freqs.length;o.connect(g);g.connect(lp);o.start();
+      const lfo=AC.createOscillator();lfo.frequency.value=.028+i*.015;const lg=AC.createGain();lg.gain.value=3.2;lfo.connect(lg);lg.connect(o.detune);lfo.start();
+    });
+    // slow filter sweep for movement
+    const flfo=AC.createOscillator();flfo.frequency.value=.05;const fg=AC.createGain();fg.gain.value=180;flfo.connect(fg);fg.connect(lp.frequency);flfo.start();
+    started=true;
+  }
+  btn.addEventListener('click',()=>{
+    try{ if(!started)build(); if(AC.state==='suspended')AC.resume();
+      const on=master.gain.value<.001;
+      gsap.to(master.gain,{value:on?.11:0,duration:on?2:.8,ease:'sine.inOut'});
+      btn.classList.toggle('on',on); txt.textContent=on?'Ambience · On':'Ambience';
+    }catch(e){txt.textContent='—';}
+  });
+})();
+</script>
+</body>
+</html>
