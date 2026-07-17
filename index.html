@@ -21,6 +21,7 @@
   --wk-noct:url("https://images.unsplash.com/photo-1772191399367-91ed8d95664b?w=900&q=80&auto=format&fit=crop");
   --wk-volta:url("https://images.unsplash.com/photo-1645400379459-f6fd3d963fd4?w=900&q=80&auto=format&fit=crop");
   --wk-mer:url("https://images.unsplash.com/photo-1760175445000-0e01e193d1cd?w=900&q=80&auto=format&fit=crop");
+  --wk-helios:url("https://images.unsplash.com/photo-1601042879364-f3947d3f9c16?w=900&q=80&auto=format&fit=crop");
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--bg);color:var(--ink)}
@@ -77,7 +78,7 @@ section{position:relative;z-index:3}
 .wgrid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
 .wk{position:relative;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:#0a0c18;aspect-ratio:16/11;display:block}
 .wk .thumb{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.5;transition:opacity .5s,transform .8s;transform:scale(1.02)}
-.wk.noct .thumb{background-image:var(--wk-noct)} .wk.volta .thumb{background-image:var(--wk-volta)} .wk.mer .thumb{background-image:var(--wk-mer)}
+.wk.noct .thumb{background-image:var(--wk-noct)} .wk.volta .thumb{background-image:var(--wk-volta)} .wk.mer .thumb{background-image:var(--wk-mer)} .wk.helios .thumb{background-image:var(--wk-helios)}
 .wk .grd{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,6,14,.25),rgba(5,6,14,.85));transition:.5s}
 .wk:hover .thumb{opacity:.72;transform:scale(1.06)}
 .wk .info{position:absolute;left:0;bottom:0;padding:32px;z-index:2;width:100%}
@@ -176,7 +177,7 @@ footer .fs{font-size:12px;color:var(--mut);letter-spacing:.14em;text-transform:u
     <a class="wk noct rise" href="work/nocturne.html" target="_blank" rel="noopener"><div class="thumb"></div><div class="grd"></div><div class="go">View live ↗</div><div class="info"><div class="idx">01</div><h3>Nocturne</h3><div class="meta"><span>Fragrance house</span><span>Cinematic</span><span>Sound</span></div></div></a>
     <a class="wk volta rise" href="work/volta.html" target="_blank" rel="noopener"><div class="thumb"></div><div class="grd"></div><div class="go">View live ↗</div><div class="info"><div class="idx">02</div><h3>Volta</h3><div class="meta"><span>Electric hypercar</span><span>Horizontal scroll</span></div></div></a>
     <a class="wk mer rise" href="work/meridian.html" target="_blank" rel="noopener"><div class="thumb"></div><div class="grd"></div><div class="go">View live ↗</div><div class="info"><div class="idx">03</div><h3>Meridian</h3><div class="meta"><span>Coffee roaster</span><span>Editorial</span></div></div></a>
-    <div class="wk soon rise"><div class="thumb"></div><div class="grd"></div><div class="go">In production</div><div class="info"><div class="idx">04</div><h3>Helios</h3><div class="meta"><span>Web3 game</span><span>Shader FX</span></div></div></div>
+    <a class="wk helios rise" href="work/helios.html" target="_blank" rel="noopener"><div class="thumb"></div><div class="grd"></div><div class="go">View live ↗</div><div class="info"><div class="idx">04</div><h3>Helios</h3><div class="meta"><span>On-chain game</span><span>Neon</span></div></div></a>
   </div>
 </div></section>
 

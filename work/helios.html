@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Helios — A world you own</title>
+<meta name="description" content="Helios — an on-chain game world. Immersive brand experience designed & built by NYXEL.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<style>
+:root{
+  --bg:#06060c; --ink:#eaf0ff; --mut:#7d84a8; --mag:#ff2d9b; --cyan:#22e0ff; --vio:#8b5cff; --line:rgba(255,255,255,.09);
+  --c1:url("https://images.unsplash.com/photo-1601042879364-f3947d3f9c16?w=2200&q=80&auto=format&fit=crop");
+  --c6:url("https://images.unsplash.com/photo-1573767291321-c0af2eaf5266?w=2000&q=80&auto=format&fit=crop");
+  --a3:url("https://images.unsplash.com/photo-1549317336-206569e8475c?w=1800&q=80&auto=format&fit=crop");
+  --c2:url("https://images.unsplash.com/photo-1519608487953-e999c86e7455?w=1800&q=80&auto=format&fit=crop");
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--mag);color:#0a0410}
+h1,h2,h3,.chakra{font-family:'Chakra Petch',sans-serif;font-weight:700;line-height:1;letter-spacing:-.01em}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1280px;margin:0 auto;padding:0 40px}
+.eyebrow{font-family:'Chakra Petch';font-weight:600;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--cyan)}
+.mut{color:var(--mut)} .mag{color:var(--mag)} .cyan{color:var(--cyan)}
+.neonm{text-shadow:0 0 8px rgba(255,45,155,.8),0 0 26px rgba(255,45,155,.5),0 0 52px rgba(255,45,155,.28)}
+.neonc{text-shadow:0 0 8px rgba(34,224,255,.8),0 0 26px rgba(34,224,255,.5),0 0 52px rgba(34,224,255,.28)}
+.gridov{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.5;background-image:linear-gradient(rgba(34,224,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(139,92,255,.04) 1px,transparent 1px);background-size:46px 46px;mask-image:radial-gradient(80% 70% at 50% 30%,#000,transparent)}
+/* loader */
+#load{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px}
+#load .lw{font-family:'Chakra Petch';font-weight:700;font-size:clamp(40px,8vw,90px);letter-spacing:.2em;text-indent:.2em;opacity:0;color:var(--ink)}
+#load .lb{width:0;height:2px;background:linear-gradient(90deg,transparent,var(--mag),var(--cyan),transparent)}
+/* header */
+header{position:fixed;top:0;left:0;right:0;z-index:80;transition:background .4s,backdrop-filter .4s,border-color .4s;border-bottom:1px solid transparent}
+header.scrolled{background:rgba(6,6,12,.72);backdrop-filter:blur(12px);border-color:var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;height:82px}
+.brand{font-family:'Chakra Petch';font-weight:700;font-size:22px;letter-spacing:.2em;text-indent:.2em;display:flex;align-items:center;gap:11px}
+.brand .b{width:10px;height:10px;background:var(--mag);box-shadow:0 0 12px var(--mag);transform:rotate(45deg);text-indent:0}
+.navcta{font-family:'Chakra Petch';font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--mag);color:var(--ink);padding:10px 22px;transition:.3s;box-shadow:inset 0 0 0 rgba(255,45,155,0)}
+.navcta:hover{background:var(--mag);color:#0a0410;box-shadow:0 0 24px rgba(255,45,155,.5)}
+section{position:relative;z-index:3}
+/* hero */
+.hero{height:100vh;min-height:640px;position:relative;overflow:hidden;display:flex;align-items:center}
+.hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
+.hero-bg .img{position:absolute;inset:-6%;background:var(--c1) center/cover;will-change:transform}
+.hero-grad{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(6,6,12,.55),rgba(6,6,12,.25) 30%,rgba(6,6,12,.5) 65%,rgba(6,6,12,.97)),radial-gradient(60% 50% at 30% 50%,rgba(255,45,155,.12),transparent)}
+.hero-in{position:relative;z-index:2;width:100%;will-change:transform}
+.hero-in .eyebrow{display:block;margin-bottom:24px;opacity:0}
+.hero-in h1{font-size:clamp(72px,16vw,240px);font-weight:700;letter-spacing:.01em}
+.hero-in h1 .c{display:inline-block;opacity:0;transform:translateY(50px)}
+.hero-in .sub{margin-top:24px;font-family:'Chakra Petch';font-weight:500;font-size:clamp(18px,2.4vw,30px);color:var(--ink);opacity:0}
+.hero-in .sub b{color:var(--cyan);font-weight:600}
+.hero-cta{margin-top:40px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;opacity:0}
+.hero-cta a{font-family:'Chakra Petch';font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;padding:15px 30px}
+.hero-cta .p{background:var(--mag);color:#0a0410;box-shadow:0 0 34px rgba(255,45,155,.45)}
+.hero-cta .s{border:1px solid var(--line);color:var(--ink)}.hero-cta .s:hover{border-color:var(--cyan);color:var(--cyan)}
+.cue{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:3;font-family:'Chakra Petch';font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0}
+.cue i{width:1px;height:44px;background:linear-gradient(var(--mag),transparent);animation:cue 2s ease-in-out infinite;transform-origin:top}
+@keyframes cue{0%,100%{transform:scaleY(.3);opacity:.4}50%{transform:scaleY(1);opacity:1}}
+/* manifesto */
+.manifesto{padding:26vh 0;text-align:center}
+.manifesto p{font-family:'Chakra Petch';font-weight:600;font-size:clamp(30px,5.6vw,86px);line-height:1.05;max-width:15ch;margin:0 auto;letter-spacing:-.01em}
+.manifesto .w{display:inline-block;opacity:.12;transition:opacity .1s}
+.manifesto em{font-style:normal;color:var(--mag)}
+/* stats */
+.stats{padding:8vh 0 18vh}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.stat{background:var(--bg);padding:44px 30px;text-align:center;transition:background .4s}
+.stat:hover{background:#0b0b16}
+.stat .n{font-family:'Chakra Petch';font-weight:700;font-size:clamp(40px,5.4vw,72px);line-height:1}
+.stat .n .u{font-size:.4em;color:var(--cyan)}
+.stat .l{margin-top:12px;font-family:'Chakra Petch';font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--mut)}
+/* band */
+.band{height:104vh;position:relative;overflow:hidden;display:flex;align-items:center}
+.band .bg{position:absolute;inset:-9% 0;background-size:cover;background-position:center;will-change:transform;z-index:0}
+.band.grid .bg{background-image:var(--c6)} .band.waves .bg{background-image:var(--a3)}
+.band .ov{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(6,6,12,.82),rgba(6,6,12,.2) 55%,rgba(6,6,12,.55))}
+.band .cap{position:relative;z-index:2;max-width:600px}
+.band .cap .eyebrow{display:block;margin-bottom:18px}
+.band .cap h2{font-family:'Chakra Petch';font-weight:700;font-size:clamp(36px,5.4vw,86px)}
+.band .cap p{margin-top:20px;color:#c3c9e4;max-width:44ch;font-size:16px}
+/* factions */
+.factions{padding:16vh 0}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;margin-bottom:56px}
+.sec-head h2{font-family:'Chakra Petch';font-weight:700;font-size:clamp(32px,4.6vw,62px)}
+.sec-head .lab{font-family:'Chakra Petch';font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--mag)}
+.fgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.fac{border:1px solid var(--line);padding:30px 26px;min-height:300px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:.4s;background:linear-gradient(180deg,rgba(255,255,255,.015),transparent)}
+.fac::before{content:"";position:absolute;left:0;top:0;width:100%;height:3px;background:var(--fc);box-shadow:0 0 18px var(--fc);opacity:.7;transition:.4s}
+.fac:hover{transform:translateY(-6px);border-color:var(--fc);box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.fac:hover::before{opacity:1;height:4px}
+.fac .tag{font-family:'Chakra Petch';font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--fc)}
+.fac h3{font-family:'Chakra Petch';font-weight:700;font-size:30px;margin-top:14px}
+.fac .d{color:var(--mut);font-size:14px;margin-top:10px}
+.fac .h{margin-top:auto;padding-top:22px;border-top:1px solid var(--line);font-family:'Chakra Petch';font-size:13px;color:#c3c9e4}
+.fac .h b{color:var(--fc)}
+.f1{--fc:#ff2d9b}.f2{--fc:#22e0ff}.f3{--fc:#8b5cff}.f4{--fc:#5cff9d}
+/* cta */
+.cta{min-height:96vh;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;border-top:1px solid var(--line)}
+.cta .bg{position:absolute;inset:-6%;background:var(--c1) center/cover;filter:brightness(.5) saturate(1.3);will-change:transform;z-index:0}
+.cta .ov{position:absolute;inset:0;z-index:1;background:radial-gradient(70% 70% at 50% 50%,rgba(6,6,12,.35),rgba(6,6,12,.94))}
+.cta .in{position:relative;z-index:2;padding:0 20px}
+.cta .eyebrow{display:block;margin-bottom:22px}
+.cta h2{font-family:'Chakra Petch';font-weight:700;font-size:clamp(46px,9vw,140px);letter-spacing:.01em}
+.cta .sub{margin:24px auto 0;max-width:44ch;color:#c3c9e4;font-size:16px}
+.magnet{display:inline-block;margin-top:40px}
+.magnet a{display:inline-block;font-family:'Chakra Petch';font-weight:600;font-size:15px;letter-spacing:.06em;text-transform:uppercase;background:var(--mag);color:#0a0410;padding:18px 44px;will-change:transform;box-shadow:0 0 46px rgba(255,45,155,.5)}
+.cta .fine{margin-top:22px;font-family:'Chakra Petch';font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+/* footer */
+footer{border-top:1px solid var(--line);padding:44px 0;position:relative;z-index:3}
+footer .fin{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--mut)}
+footer .by{color:var(--ink);border-bottom:1px solid var(--mag);padding-bottom:2px}
+.rise{will-change:transform,opacity}
+@media(max-width:900px){
+  .wrap{padding:0 22px}
+  .sgrid{grid-template-columns:1fr 1fr}
+  .fgrid{grid-template-columns:1fr 1fr}
+  .band .cap h2{font-size:40px}
+}
+</style>
+</head>
+<body>
+<div class="gridov"></div>
+
+<div id="load"><div class="lw">HELIOS</div><div class="lb"></div></div>
+
+<header><div class="wrap"><nav>
+  <div class="brand"><span class="b"></span>HELIOS</div>
+  <a class="navcta" href="#enter">Mint access</a>
+</nav></div></header>
+
+<section class="hero">
+  <div class="hero-bg"><div class="img"></div></div>
+  <div class="hero-grad"></div>
+  <div class="wrap hero-in">
+    <span class="eyebrow">Helios — On-chain Game World</span>
+    <h1 id="htitle" class="neonm">HELIOS</h1>
+    <div class="sub">You don't play it. You <b>own</b> a piece of it.</div>
+    <div class="hero-cta">
+      <a class="p" href="#enter">Enter the grid</a>
+      <a class="s" href="#factions">Explore realms</a>
+    </div>
+  </div>
+  <div class="cue">Scroll<i></i></div>
+</section>
+
+<section class="manifesto"><div class="wrap">
+  <p id="mani">A world with a market, and you hold the <em>deed.</em></p>
+</div></section>
+
+<section class="stats"><div class="wrap"><div class="sgrid">
+  <div class="stat rise"><div class="n"><span data-count="240">0</span><span class="u">K</span></div><div class="l">Players</div></div>
+  <div class="stat rise"><div class="n"><span data-count="1.2">0</span><span class="u">M</span></div><div class="l">On-chain items</div></div>
+  <div class="stat rise"><div class="n"><span data-count="8">0</span></div><div class="l">Realms</div></div>
+  <div class="stat rise"><div class="n">$<span data-count="46">0</span><span class="u">M</span></div><div class="l">Volume traded</div></div>
+</div></div></section>
+
+<section class="band grid"><div class="bg"></div><div class="ov"></div>
+  <div class="wrap"><div class="cap">
+    <span class="eyebrow">The Grid</span>
+    <h2>Every item. Every acre.<br><span class="mag neonm">On-chain.</span></h2>
+    <p>Nothing in Helios is a database row you rent. It's a token you hold, trade, and take with you — provably yours, forever.</p>
+  </div></div>
+</section>
+
+<section class="factions" id="factions"><div class="wrap">
+  <div class="sec-head rise"><h2>Choose your realm</h2><div class="lab">Eight realms · four powers</div></div>
+  <div class="fgrid">
+    <div class="fac f1 rise"><div class="tag">Fire</div><h3>Solaris</h3><div class="d">The burning core. High-yield, high-risk territory for those who play forward.</div><div class="h">Holders · <b>62,400</b></div></div>
+    <div class="fac f2 rise"><div class="tag">Data</div><h3>Azure</h3><div class="d">The sea of information. Where strategy, staking and the sharpest minds settle.</div><div class="h">Holders · <b>58,110</b></div></div>
+    <div class="fac f3 rise"><div class="tag">Void</div><h3>Obsidian</h3><div class="d">The dark market. Rare drops, private auctions, and the game beneath the game.</div><div class="h">Holders · <b>41,780</b></div></div>
+    <div class="fac f4 rise"><div class="tag">Life</div><h3>Verdant</h3><div class="d">The living grid. Build, breed, and grow assets that compound over seasons.</div><div class="h">Holders · <b>77,050</b></div></div>
+  </div>
+</div></section>
+
+<section class="band waves"><div class="bg"></div><div class="ov"></div>
+  <div class="wrap"><div class="cap">
+    <span class="eyebrow">Provenance</span>
+    <h2>Built to be <span class="cyan neonc">owned,</span><br>not rented.</h2>
+    <p>Open economy, player-run markets, assets that outlive the season. A game world that keeps its promises because the chain remembers them.</p>
+  </div></div>
+</section>
+
+<section class="cta" id="enter"><div class="bg"></div><div class="ov"></div>
+  <div class="in">
+    <span class="eyebrow">Genesis pass · Limited</span>
+    <h2 class="neonm">Enter <span class="cyan neonc">Helios.</span></h2>
+    <p class="sub">Mint a genesis pass, claim your first acre, and step onto the grid before the world fills up.</p>
+    <span class="magnet"><a href="#" id="mag">Mint access</a></span>
+    <div class="fine">Connect wallet · Genesis mint 2026</div>
+  </div>
+</section>
+
+<footer><div class="wrap"><div class="fin">
+  <span>© 2026 Helios · An on-chain world</span>
+  <span>Experience &amp; build by <a class="by" href="https://nyxel.space" target="_blank" rel="noopener">NYXEL</a> ↗</span>
+</div></div></footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const LOW=(navigator.hardwareConcurrency||8)<=4;
+const lenis=new Lenis({lerp:LOW?.12:.09}); lenis.on('scroll',ScrollTrigger.update); gsap.ticker.add(t=>lenis.raf(t*1000)); gsap.ticker.lagSmoothing(0);
+
+(function(){const el=document.getElementById('htitle');el.innerHTML=el.textContent.split('').map(c=>`<span class="c">${c}</span>`).join('');})();
+(function(){const el=document.getElementById('mani');const out=[];el.childNodes.forEach(n=>{
+  if(n.nodeType===3){n.textContent.split(/(\s+)/).forEach(w=>{if(w.trim()){const s=document.createElement('span');s.className='w';s.textContent=w;out.push(s);}else if(w){out.push(document.createTextNode(w));}});}
+  else{n.classList.add('w');out.push(n);}});el.innerHTML='';out.forEach(o=>el.appendChild(o));})();
+
+ScrollTrigger.create({start:'top -60',onUpdate:s=>document.querySelector('header').classList.toggle('scrolled',s.scroll()>60)});
+
+/* intro (robust) */
+function hIntro(){
+  if(window.__hi)return; window.__hi=1;
+  gsap.timeline()
+    .to('#load .lw',{opacity:1,duration:.6,ease:'power2.out'})
+    .to('#load .lb',{width:'min(340px,52vw)',duration:.85,ease:'power2.inOut'},'-=.3')
+    .to('#load',{yPercent:-100,duration:.75,ease:'power4.inOut'},'+=.25')
+    .add(()=>{const l=document.getElementById('load');if(l)l.style.display='none';})
+    .from('.hero-bg .img',{scale:1.18,duration:1.4,ease:'power3.out'},'-=.7')
+    .to('.hero-in .eyebrow',{opacity:1,duration:.6},'-=1')
+    .to('.hero-in h1 .c',{opacity:1,y:0,duration:.7,stagger:.06,ease:'power4.out'},'-=.6')
+    .to('.hero-in .sub',{opacity:1,duration:.6},'-=.4')
+    .to('.hero-cta',{opacity:1,duration:.6},'-=.35')
+    .to('.cue',{opacity:1,duration:.5},'-=.3');
+}
+function hReveal(){const l=document.getElementById('load');if(l)l.style.display='none';gsap.set(['.hero-in .eyebrow','.hero-in .sub','.hero-cta','.cue'],{opacity:1});gsap.set('.hero-in h1 .c',{opacity:1,y:0});}
+if(document.readyState==='complete') hIntro(); else window.addEventListener('load',hIntro);
+setTimeout(()=>{const l=document.getElementById('load'); if(l&&getComputedStyle(l).display!=='none') hReveal();},4200);
+
+/* hero parallax */
+gsap.to('.hero-in',{yPercent:-16,opacity:.2,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+gsap.to('.hero-bg',{yPercent:12,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+
+/* manifesto */
+gsap.to('.manifesto .w',{opacity:1,stagger:.12,ease:'none',scrollTrigger:{trigger:'.manifesto',start:'top 72%',end:'bottom 76%',scrub:.6}});
+
+/* count-up */
+function fmt(v,dec){const n=dec?+v.toFixed(1):Math.round(v);return n.toLocaleString('en-US',{minimumFractionDigits:dec,maximumFractionDigits:dec});}
+gsap.utils.toArray('.stat [data-count]').forEach(el=>{const end=+el.dataset.count,dec=end%1!==0?1:0,o={v:0};
+  gsap.to(o,{v:end,duration:1.8,ease:'power2.out',scrollTrigger:{trigger:el,start:'top 88%',once:true},onUpdate(){el.textContent=fmt(o.v,dec);}});});
+
+/* rise reveals */
+gsap.utils.toArray('.rise').forEach(el=>gsap.from(el,{y:52,opacity:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',once:true}}));
+
+/* bands */
+gsap.utils.toArray('.band').forEach(b=>{
+  gsap.fromTo(b.querySelector('.bg'),{yPercent:-6},{yPercent:6,ease:'none',scrollTrigger:{trigger:b,start:'top bottom',end:'bottom top',scrub:true}});
+  gsap.from(b.querySelector('.cap'),{y:56,opacity:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:b,start:'top 62%',once:true}});
+});
+
+/* cta */
+gsap.fromTo('.cta .bg',{scale:1.15},{scale:1,ease:'none',scrollTrigger:{trigger:'.cta',start:'top bottom',end:'bottom top',scrub:true}});
+gsap.from('.cta .in > *',{y:48,opacity:0,duration:1,stagger:.1,ease:'power4.out',scrollTrigger:{trigger:'.cta',start:'top 62%',once:true}});
+
+/* magnetic button */
+(function(){const m=document.getElementById('mag'),w=m.parentElement;
+  w.addEventListener('mousemove',e=>{const r=w.getBoundingClientRect();gsap.to(m,{x:(e.clientX-r.left-r.width/2)*.4,y:(e.clientY-r.top-r.height/2)*.6,duration:.5,ease:'power3.out'});});
+  w.addEventListener('mouseleave',()=>gsap.to(m,{x:0,y:0,duration:.6,ease:'elastic.out(1,.4)'}));})();
+</script>
+</body>
+</html>
