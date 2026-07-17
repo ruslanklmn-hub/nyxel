@@ -265,8 +265,8 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 const canvas=document.getElementById('flacon'), sec=document.getElementById('flacon-sec');
 try{
   const LOW=(navigator.hardwareConcurrency||8)<=4;
-  const renderer=new THREE.WebGLRenderer({canvas,antialias:!LOW,alpha:true,powerPreference:'high-performance'});
-  renderer.setPixelRatio(Math.min(devicePixelRatio,LOW?1.3:2));
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
+  renderer.setPixelRatio(LOW?1.4:Math.min(devicePixelRatio,2));
   renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.08;
   const scene=new THREE.Scene();
   const camera=new THREE.PerspectiveCamera(32,1,0.1,100); camera.position.set(0,0.15,7.8);
@@ -303,16 +303,15 @@ try{
   let tmx=0,tmy=0,mx=0,my=0;
   addEventListener('mousemove',e=>{tmx=e.clientX/innerWidth-0.5;tmy=e.clientY/innerHeight-0.5;},{passive:true});
   const st={r:0};
-  if(window.gsap&&window.ScrollTrigger){gsap.to(st,{r:Math.PI*3,ease:'none',scrollTrigger:{trigger:sec,start:'top top',end:'bottom bottom',scrub:0.6}});}
+  if(window.gsap&&window.ScrollTrigger){gsap.to(st,{r:Math.PI*3,ease:'none',scrollTrigger:{trigger:sec,start:'top top',end:'bottom bottom',scrub:1.1}});}
   let vis=true;
   new IntersectionObserver(es=>{vis=es[0].isIntersecting;},{rootMargin:'150px'}).observe(sec);
   function resize(){const w=canvas.clientWidth||innerWidth,h=canvas.clientHeight||innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
   addEventListener('resize',resize); resize();
-  const clock=new THREE.Clock();
+  // idle-still: rotates only on scroll; cursor adds a gentle, damped tilt (no trembling)
   (function loop(){requestAnimationFrame(loop); if(!vis)return;
-    const t=clock.getElapsedTime();
-    mx+=(tmx-mx)*0.05; my+=(tmy-my)*0.05;
-    flacon.rotation.y=st.r+mx*0.6; flacon.rotation.x=-0.04+my*0.32; flacon.position.y=Math.sin(t*0.7)*0.05;
+    mx+=(tmx-mx)*0.06; my+=(tmy-my)*0.06;
+    flacon.rotation.y=st.r+mx*0.3; flacon.rotation.x=-0.05+my*0.14;
     renderer.render(scene,camera);
   })();
 }catch(e){ if(sec) sec.setAttribute('data-3d','failed'); console.warn('3D flacon failed:',e); }
