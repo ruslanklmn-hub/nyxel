@@ -3,301 +3,306 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NYXEL — Immersive websites for teams building the future</title>
-<meta name="description" content="NYXEL is a studio crafting 3D, scroll-driven web experiences for funded AI & web3 teams. Where a brand becomes a world.">
-<meta property="og:title" content="NYXEL — Immersive web experiences">
-<meta property="og:description" content="3D, scroll-driven websites for funded AI & web3 teams. Where a brand becomes a world.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<title>NYXEL — Immersive websites where a brand becomes a world</title>
+<meta name="description" content="NYXEL is an immersive web studio. We design and build 3D, WebGL and motion-driven websites — worlds — for brands that refuse to be forgettable.">
+<meta property="og:title" content="NYXEL — Immersive Web Studio">
+<meta property="og:description" content="Immersive websites where a brand becomes a world. 3D · WebGL · Motion.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
 <style>
 :root{
-  --bg:#04050a; --ink:#eef0f8; --mut:#8a93b0; --mut2:#5b6480;
-  --vio:#7c5cff; --cyan:#22d3ee; --line:rgba(255,255,255,.09); --line2:rgba(255,255,255,.16);
-  --grad:linear-gradient(120deg,#7c5cff,#22d3ee);
+  --bg:#05060e; --ink:#eef0f8; --mut:#8a93b4; --vio:#7c5cff; --cyan:#22d3ee; --star:#cdd6ff;
+  --grad:linear-gradient(120deg,#7c5cff,#22d3ee); --line:rgba(255,255,255,.09);
+  --galaxy:url("https://images.unsplash.com/photo-1464802686167-b939a6910659?w=2400&q=80&auto=format&fit=crop");
+  --nebula:url("https://images.unsplash.com/photo-1677029907981-e9a44fb7409a?w=2000&q=80&auto=format&fit=crop");
+  --wk-noct:url("https://images.unsplash.com/photo-1772191399367-91ed8d95664b?w=900&q=80&auto=format&fit=crop");
+  --wk-volta:url("https://images.unsplash.com/photo-1645400379459-f6fd3d963fd4?w=900&q=80&auto=format&fit=crop");
+  --wk-mer:url("https://images.unsplash.com/photo-1760175445000-0e01e193d1cd?w=900&q=80&auto=format&fit=crop");
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--bg);color:var(--ink)}
-body{font-family:'Inter',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none}
-h1,h2,h3,.dsp{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em;line-height:1;font-weight:600}
+body{font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--vio);color:#fff}
+h1,h2,h3,.grotesk{font-family:'Space Grotesk',sans-serif;letter-spacing:-.02em;line-height:1;font-weight:600}
 a{color:inherit;text-decoration:none}
-.wrap{max-width:1240px;margin:0 auto;padding:0 30px}
-.grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-
-/* custom cursor */
-.cursor{position:fixed;top:0;left:0;width:10px;height:10px;border-radius:50%;background:#fff;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;transition:width .25s,height .25s,background .25s}
-.cursor.big{width:64px;height:64px;background:var(--cyan);mix-blend-mode:screen;opacity:.5}
-@media(hover:none){.cursor{display:none}body{cursor:auto}}
-
-/* webgl bg */
-#gl{position:fixed;inset:0;z-index:0;width:100vw;height:100vh;display:block}
-
-header{position:fixed;top:0;left:0;right:0;z-index:100;mix-blend-mode:difference}
+.wrap{max-width:1280px;margin:0 auto;padding:0 40px}
+.eyebrow{font-family:'Space Grotesk';font-weight:500;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--cyan)}
+.mut{color:var(--mut)} .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+.spacetint{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 80% at 50% -10%,rgba(124,92,255,.12),transparent 60%),radial-gradient(90% 60% at 90% 100%,rgba(34,211,238,.08),transparent 55%)}
+/* loader */
+#load{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px}
+#load .lw{font-family:'Space Grotesk';font-weight:700;font-size:clamp(38px,7vw,80px);letter-spacing:.24em;text-indent:.24em;opacity:0}
+#load .lb{width:0;height:1px;background:var(--grad)}
+/* header */
+header{position:fixed;top:0;left:0;right:0;z-index:80;transition:background .4s,backdrop-filter .4s,border-color .4s;border-bottom:1px solid transparent}
+header.scrolled{background:rgba(5,6,14,.72);backdrop-filter:blur(12px);border-color:var(--line)}
 nav{display:flex;align-items:center;justify-content:space-between;height:84px}
-.logo{display:flex;align-items:center;gap:11px;font-family:'Space Grotesk';font-weight:700;font-size:21px;letter-spacing:.12em}
-.logo .mk{width:26px;height:26px;position:relative}
-.logo .mk .r{position:absolute;inset:0;border:1.5px solid #fff;border-radius:50%}
-.logo .mk .r2{position:absolute;inset:3px;border:1.5px solid #fff;border-radius:50%;transform:scaleY(.4) rotate(0deg)}
-.logo .mk .d{position:absolute;top:50%;left:50%;width:6px;height:6px;background:#fff;border-radius:50%;transform:translate(-50%,-50%)}
-.nav-links{display:flex;gap:34px;font-size:14px;color:#fff}
-.nav-cta{font-family:'Space Grotesk';font-weight:600;font-size:14px;border:1px solid #fff;padding:10px 20px;border-radius:100px;color:#fff}
-
-section{position:relative;z-index:2}
+.brand{display:flex;align-items:center;gap:13px;font-family:'Space Grotesk';font-weight:700;font-size:20px;letter-spacing:.18em;text-indent:.18em}
+.nlinks{display:flex;align-items:center;gap:30px}
+.nlinks a{font-family:'Space Grotesk';font-weight:500;font-size:13px;letter-spacing:.03em;color:var(--mut);transition:.3s}
+.nlinks a:hover{color:var(--ink)}
+.navcta{font-family:'Space Grotesk';font-weight:600;font-size:13px;background:var(--grad);color:#0a0a16;border-radius:100px;padding:11px 22px}
+section{position:relative;z-index:3}
 /* hero */
-.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2}
-.hero .kick{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:34px;overflow:hidden}
-.hero h1{font-size:clamp(44px,8.5vw,132px);font-weight:600;line-height:.98;letter-spacing:-.03em}
-.hero h1 .line{display:block;overflow:hidden}
-.hero h1 .line span{display:inline-block;will-change:transform}
-.hero .sub{margin-top:38px;max-width:540px;font-size:clamp(16px,1.5vw,19px);color:var(--mut);overflow:hidden}
-.hero .scroll-i{position:absolute;bottom:40px;left:30px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut2);display:flex;align-items:center;gap:10px}
-.hero .scroll-i .bar{width:44px;height:1px;background:var(--mut2);position:relative;overflow:hidden}
-.hero .scroll-i .bar::after{content:"";position:absolute;inset:0;background:var(--cyan);animation:sweep 2.2s infinite}
-@keyframes sweep{0%{transform:translateX(-100%)}60%,100%{transform:translateX(100%)}}
-
+.hero{height:100vh;min-height:660px;position:relative;overflow:hidden;display:flex;align-items:center}
+.hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
+.hero-bg .img{position:absolute;inset:-6%;background:var(--galaxy) center/cover;opacity:.62;will-change:transform}
+.hero-grad{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(5,6,14,.55),rgba(5,6,14,.2) 35%,rgba(5,6,14,.5) 70%,rgba(5,6,14,.96)),radial-gradient(80% 60% at 50% 45%,transparent,rgba(5,6,14,.5))}
+.hero-in{position:relative;z-index:2;width:100%;will-change:transform}
+.hero-in .eyebrow{display:block;margin-bottom:28px;opacity:0}
+.hero-in h1{font-size:clamp(48px,8.6vw,132px);font-weight:600;letter-spacing:-.03em;max-width:16ch}
+.hero-in h1 .l{display:block}.hero-in h1 .l span{display:inline-block;opacity:0;transform:translateY(44px)}
+.hero-in .sub{margin-top:32px;font-size:19px;color:var(--mut);max-width:52ch;opacity:0}
+.hero-cta{margin-top:42px;display:flex;gap:16px;flex-wrap:wrap;opacity:0}
+.hero-cta a{font-family:'Space Grotesk';font-weight:600;font-size:15px;border-radius:100px;padding:15px 30px}
+.hero-cta .p{background:var(--grad);color:#0a0a16}
+.hero-cta .s{border:1px solid var(--line);color:var(--ink)}
+.hero-cta .s:hover{border-color:var(--cyan)}
+.cue{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:3;font-family:'Space Grotesk';font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0}
+.cue i{width:1px;height:46px;background:linear-gradient(var(--cyan),transparent);animation:cue 2.4s ease-in-out infinite;transform-origin:top}
+@keyframes cue{0%,100%{transform:scaleY(.3);opacity:.4}50%{transform:scaleY(1);opacity:1}}
 /* manifesto */
-.manifesto{padding:32vh 0}
-.manifesto .big{font-family:'Space Grotesk';font-weight:500;font-size:clamp(30px,5.2vw,74px);line-height:1.06;letter-spacing:-.02em;max-width:16ch}
-.manifesto .big .w{display:inline-block;opacity:.14;will-change:opacity,transform}
-.manifesto .big .accent{color:var(--cyan)}
-
+.manifesto{padding:30vh 0;text-align:center}
+.manifesto p{font-family:'Space Grotesk';font-weight:500;font-size:clamp(32px,6vw,90px);line-height:1.05;max-width:15ch;margin:0 auto;letter-spacing:-.02em}
+.manifesto .w{display:inline-block;opacity:.12;transition:opacity .1s}
 /* work */
-.work{padding:14vh 0}
-.sec-label{display:flex;align-items:center;gap:14px;font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--mut);margin-bottom:60px}
-.sec-label::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--grad)}
-.work-list{display:flex;flex-direction:column;gap:16px}
-.wk{position:relative;border-top:1px solid var(--line);padding:40px 0;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;transition:padding-left .4s}
-.wk:hover{padding-left:24px}
-.wk::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(124,92,255,.08),transparent);opacity:0;transition:.4s}
-.wk:hover::before{opacity:1}
-.wk .idx{font-family:'Space Grotesk';font-size:13px;color:var(--mut2);margin-bottom:14px}
-.wk h3{font-family:'Space Grotesk';font-weight:600;font-size:clamp(30px,4.6vw,58px);line-height:1}
-.wk .meta{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
-.wk .meta span{font-size:12px;color:#cdd5ee;border:1px solid var(--line);padding:5px 11px;border-radius:100px}
-.wk .go{font-family:'Space Grotesk';font-size:14px;color:var(--mut);white-space:nowrap;display:flex;align-items:center;gap:8px}
-.wk:hover .go{color:var(--cyan)}
-.wk-note{margin-top:40px;font-size:13.5px;color:var(--mut2)}
-
-/* services */
-.services{padding:16vh 0}
-.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:14px}
-.svc{border:1px solid var(--line);border-radius:20px;padding:34px 30px;background:rgba(255,255,255,.015);display:flex;flex-direction:column;min-height:340px}
-.svc.hit{border-color:transparent;background:linear-gradient(rgba(10,12,24,.6),rgba(10,12,24,.6)) padding-box,var(--grad) border-box;border:1.5px solid transparent}
-.svc .nm{font-family:'Space Grotesk';font-weight:600;font-size:18px;margin-bottom:12px}
-.svc .pr{font-family:'Space Grotesk';font-weight:700;font-size:40px;margin-bottom:6px}
-.svc .pr small{font-size:17px;color:var(--mut)}
-.svc .du{font-size:13px;color:var(--mut);margin-bottom:auto}
-.svc ul{list-style:none;margin-top:22px;display:flex;flex-direction:column;gap:11px}
-.svc li{font-size:14px;color:#c7cee3;padding-left:20px;position:relative}
-.svc li::before{content:"→";position:absolute;left:0;color:var(--cyan)}
-
-/* contact */
-.contact{padding:20vh 0 14vh;text-align:center}
-.contact h2{font-size:clamp(40px,9vw,150px);line-height:.92;letter-spacing:-.03em;font-weight:600}
-.contact .em{display:inline-block;margin-top:44px;font-family:'Space Grotesk';font-size:clamp(18px,2.4vw,30px);border-bottom:1px solid var(--line2);padding-bottom:8px}
-.contact .pay{margin-top:30px;font-size:13.5px;color:var(--mut2)}
-
-footer{border-top:1px solid var(--line);padding:40px 0;position:relative;z-index:2;display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;font-size:13.5px;color:var(--mut)}
-
+.work{padding:8vh 0 22vh}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;margin-bottom:64px}
+.sec-head h2{font-size:clamp(30px,4.4vw,58px);font-weight:600}
+.sec-head .lab{font-family:'Space Grotesk';font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--cyan)}
+.wgrid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.wk{position:relative;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:#0a0c18;aspect-ratio:16/11;display:block}
+.wk .thumb{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.5;transition:opacity .5s,transform .8s;transform:scale(1.02)}
+.wk.noct .thumb{background-image:var(--wk-noct)} .wk.volta .thumb{background-image:var(--wk-volta)} .wk.mer .thumb{background-image:var(--wk-mer)}
+.wk .grd{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,6,14,.25),rgba(5,6,14,.85));transition:.5s}
+.wk:hover .thumb{opacity:.72;transform:scale(1.06)}
+.wk .info{position:absolute;left:0;bottom:0;padding:32px;z-index:2;width:100%}
+.wk .idx{font-family:'Space Grotesk';font-size:12px;color:var(--cyan);letter-spacing:.1em}
+.wk h3{font-family:'Space Grotesk';font-weight:600;font-size:clamp(26px,3.4vw,42px);margin-top:8px}
+.wk .meta{margin-top:14px;display:flex;gap:9px;flex-wrap:wrap}
+.wk .meta span{font-size:11.5px;color:#c8d0ee;border:1px solid var(--line);padding:4px 11px;border-radius:100px}
+.wk .go{position:absolute;top:28px;right:30px;z-index:2;font-family:'Space Grotesk';font-size:13px;color:var(--ink);opacity:.65;transition:.4s}
+.wk:hover .go{opacity:1;color:var(--cyan)}
+.wk.soon{pointer-events:none}.wk.soon .thumb{opacity:.14;background:radial-gradient(circle at 60% 40%,rgba(124,92,255,.5),transparent 60%)}
+.wk.soon .go{opacity:.5}
+/* capabilities */
+.caps{padding:16vh 0;border-top:1px solid var(--line)}
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.cap{background:var(--bg);padding:40px 34px;min-height:230px;display:flex;flex-direction:column;transition:background .4s}
+.cap:hover{background:#0a0c18}
+.cap .n{font-family:'Space Grotesk';font-size:13px;color:var(--cyan);letter-spacing:.08em}
+.cap h3{font-family:'Space Grotesk';font-weight:600;font-size:22px;margin:16px 0 12px}
+.cap p{color:var(--mut);font-size:14.5px}
+/* approach */
+.approach{padding:16vh 0;border-top:1px solid var(--line)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:56px}
+.step{border-top:2px solid rgba(124,92,255,.4);padding-top:22px}
+.step .i{font-family:'Space Grotesk';font-weight:600;color:var(--vio);margin-bottom:14px}
+.step h3{font-family:'Space Grotesk';font-weight:600;font-size:20px;margin-bottom:10px}
+.step p{color:var(--mut);font-size:14.5px}
+/* cta */
+.cta{min-height:96vh;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;border-top:1px solid var(--line)}
+.cta .bg{position:absolute;inset:-6%;background:var(--nebula) center/cover;opacity:.4;filter:saturate(1.1);will-change:transform;z-index:0}
+.cta .ov{position:absolute;inset:0;z-index:1;background:radial-gradient(70% 70% at 50% 50%,rgba(5,6,14,.35),rgba(5,6,14,.92))}
+.cta .in{position:relative;z-index:2;padding:0 20px}
+.cta .eyebrow{display:block;margin-bottom:24px}
+.cta h2{font-size:clamp(42px,8vw,130px);font-weight:600;letter-spacing:-.03em}
+.cta .sub{margin:26px auto 0;max-width:46ch;color:var(--mut);font-size:17px}
+.magnet{display:inline-block;margin-top:42px}
+.magnet a{display:inline-block;font-family:'Space Grotesk';font-weight:600;font-size:16px;background:var(--grad);color:#0a0a16;border-radius:100px;padding:18px 42px;will-change:transform;box-shadow:0 0 46px rgba(124,92,255,.4)}
+.cta .contact{margin-top:30px;display:flex;gap:26px;justify-content:center;flex-wrap:wrap;font-family:'Space Grotesk';font-size:14px}
+.cta .contact a{color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:3px;transition:.3s}
+.cta .contact a:hover{border-color:var(--cyan);color:var(--cyan)}
+/* footer */
+footer{border-top:1px solid var(--line);padding:48px 0;position:relative;z-index:3}
+footer .fin{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+footer .fb{display:flex;align-items:center;gap:12px;font-family:'Space Grotesk';font-weight:700;letter-spacing:.16em}
+footer .fs{font-size:12px;color:var(--mut);letter-spacing:.14em;text-transform:uppercase}
 .rise{will-change:transform,opacity}
+@media(max-width:900px){
+  .wrap{padding:0 22px}
+  .nlinks a:not(.navcta){display:none}
+  .wgrid{grid-template-columns:1fr}
+  .cgrid{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
-<div class="cursor" id="cursor"></div>
-<canvas id="gl"></canvas>
+<canvas id="stars"></canvas><div class="spacetint"></div>
 
-<header>
-  <div class="wrap"><nav>
-    <a class="logo" href="#top" data-h><span class="mk"><span class="r"></span><span class="r2"></span><span class="d"></span></span>NYXEL</a>
-    <div class="nav-links">
-      <a href="#work" data-h>Work</a><a href="#services" data-h>Services</a><a href="#contact" data-h>Contact</a>
-    </div>
-    <a class="nav-cta" href="#contact" data-h>Start a project</a>
-  </nav></div>
-</header>
+<div id="load"><div class="lw">NYXEL</div><div class="lb"></div></div>
 
-<a id="top"></a>
+<header><div class="wrap"><nav>
+  <div class="brand">
+    <svg width="30" height="30" viewBox="0 0 40 40"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><g transform="rotate(-22 20 20)"><ellipse cx="20" cy="20" rx="18" ry="7" fill="none" stroke="url(#g)" stroke-width="1.6"/></g><circle cx="20" cy="20" r="4.6" fill="url(#g)"/><circle cx="35" cy="13" r="2.3" fill="#eaf0ff"/></svg>
+    NYXEL
+  </div>
+  <div class="nlinks">
+    <a href="#work">Work</a><a href="#studio">Studio</a><a href="#approach">Approach</a>
+    <a class="navcta" href="#contact">Start a project</a>
+  </div>
+</nav></div></header>
+
 <section class="hero">
-  <div class="wrap">
-    <div class="kick" id="kick">NYXEL · Immersive Web Studio</div>
-    <h1 id="hero-h">
-      <span class="line"><span>Where a brand</span></span>
-      <span class="line"><span>becomes <em class="grad" style="font-style:normal">a world.</em></span></span>
-    </h1>
-    <p class="sub" id="hero-sub">Immersive, 3D, scroll-driven websites for funded AI &amp; web3 teams. We engineer motion, depth and light into experiences people don't scroll past — they get lost in.</p>
-  </div>
-  <div class="scroll-i"><span class="bar"></span>Scroll</div>
-</section>
-
-<section class="manifesto">
-  <div class="wrap">
-    <p class="big" id="manifesto">Most websites are read. Ours are <span class="accent">entered.</span></p>
-  </div>
-</section>
-
-<section class="work" id="work">
-  <div class="wrap">
-    <div class="sec-label rise">Selected worlds</div>
-    <div class="work-list">
-      <a class="wk" data-h href="work/nocturne.html" target="_blank" rel="noopener"><div><div class="idx">01</div><h3>Nocturne</h3><div class="meta"><span>Fragrance house</span><span>Cinematic</span><span>Brand world</span></div></div><div class="go">View live ↗</div></a>
-      <a class="wk" data-h href="work/volta.html" target="_blank" rel="noopener"><div><div class="idx">02</div><h3>Volta</h3><div class="meta"><span>Electric hypercar</span><span>Horizontal scroll</span><span>Brand world</span></div></div><div class="go">View live ↗</div></a>
-      <a class="wk" data-h href="work/meridian.html" target="_blank" rel="noopener"><div><div class="idx">03</div><h3>Meridian</h3><div class="meta"><span>Coffee roaster</span><span>Editorial</span><span>Brand world</span></div></div><div class="go">View live ↗</div></a>
-      <div class="wk" data-h><div><div class="idx">04</div><h3>Helios</h3><div class="meta"><span>Web3 game</span><span>Shader FX</span><span>Immersive</span></div></div><div class="go">Case study soon</div></div>
-    </div>
-    <p class="wk-note rise">Flagship case studies in production — each a fully immersive build, shipped live.</p>
-  </div>
-</section>
-
-<section class="services" id="services">
-  <div class="wrap">
-    <div class="sec-label rise">Engagements</div>
-    <div class="svc-grid">
-      <div class="svc rise"><div class="nm">Launch</div><div class="pr">$8k<small>+</small></div><div class="du">One immersive page · ~2 weeks</div><ul><li>WebGL / 3D hero</li><li>Scroll choreography</li><li>Motion + copy direction</li></ul></div>
-      <div class="svc hit rise"><div class="nm">Signature</div><div class="pr">$18k<small>+</small></div><div class="du">Full immersive site · ~3–4 weeks</div><ul><li>Everything in Launch</li><li>Custom WebGL centerpiece</li><li>Scroll-driven narrative + CMS</li><li>Brand world + product pages</li></ul></div>
-      <div class="svc rise"><div class="nm">Flagship</div><div class="pr">$30k<small>+</small></div><div class="du">Bespoke experience · quote</div><ul><li>Everything in Signature</li><li>Fully custom 3D world</li><li>Awwwards-grade ambition</li></ul></div>
+  <div class="hero-bg"><div class="img"></div></div>
+  <div class="hero-grad"></div>
+  <div class="wrap hero-in">
+    <span class="eyebrow">NYXEL — Immersive Web Studio</span>
+    <h1><span class="l"><span>Where a brand</span></span><span class="l"><span>becomes <em class="grad" style="font-style:normal">a world.</em></span></span></h1>
+    <p class="sub">We design and build immersive websites — 3D, WebGL, motion — for brands that refuse to be forgettable. Not pages. Worlds you step into.</p>
+    <div class="hero-cta">
+      <a class="p" href="#work">See the work</a>
+      <a class="s" href="#contact">Start a project</a>
     </div>
   </div>
+  <div class="cue">Enter<i></i></div>
 </section>
 
-<section class="contact" id="contact">
-  <div class="wrap">
-    <h2 id="contact-h">Let's build<br>your world.</h2>
-    <a class="em" href="mailto:hello@nyxel.space" data-h>hello@nyxel.space</a>
-    <div class="pay">Paid in USDC or card · 50% to start, 50% on delivery · milestone-based</div>
+<section class="manifesto"><div class="wrap">
+  <p id="mani">Most websites are read. Ours are entered.</p>
+</div></section>
+
+<section class="work" id="work"><div class="wrap">
+  <div class="sec-head rise">
+    <h2>Selected worlds</h2>
+    <div class="lab">Live builds ↗</div>
+  </div>
+  <div class="wgrid">
+    <a class="wk noct rise" href="work/nocturne.html" target="_blank" rel="noopener"><div class="thumb"></div><div class="grd"></div><div class="go">View live ↗</div><div class="info"><div class="idx">01</div><h3>Nocturne</h3><div class="meta"><span>Fragrance house</span><span>Cinematic</span><span>Sound</span></div></div></a>
+    <a class="wk volta rise" href="work/volta.html" target="_blank" rel="noopener"><div class="thumb"></div><div class="grd"></div><div class="go">View live ↗</div><div class="info"><div class="idx">02</div><h3>Volta</h3><div class="meta"><span>Electric hypercar</span><span>Horizontal scroll</span></div></div></a>
+    <a class="wk mer rise" href="work/meridian.html" target="_blank" rel="noopener"><div class="thumb"></div><div class="grd"></div><div class="go">View live ↗</div><div class="info"><div class="idx">03</div><h3>Meridian</h3><div class="meta"><span>Coffee roaster</span><span>Editorial</span></div></div></a>
+    <div class="wk soon rise"><div class="thumb"></div><div class="grd"></div><div class="go">In production</div><div class="info"><div class="idx">04</div><h3>Helios</h3><div class="meta"><span>Web3 game</span><span>Shader FX</span></div></div></div>
+  </div>
+</div></section>
+
+<section class="caps" id="studio"><div class="wrap">
+  <div class="sec-head rise"><h2>What we build</h2><div class="lab">Capabilities</div></div>
+  <div class="cgrid">
+    <div class="cap rise"><div class="n">01</div><h3>Immersive websites</h3><p>Scroll-choreographed experiences that feel like a place, not a page — engineered for wonder and for conversion.</p></div>
+    <div class="cap rise"><div class="n">02</div><h3>3D &amp; WebGL</h3><p>Real-time shaders, particle fields and product scenes — or pre-rendered cinematics when smoothness matters most.</p></div>
+    <div class="cap rise"><div class="n">03</div><h3>Brand worlds</h3><p>Art direction, palette, type and motion language — a coherent universe your brand lives inside, from first frame to footer.</p></div>
+    <div class="cap rise"><div class="n">04</div><h3>Motion &amp; interaction</h3><p>GSAP, Lenis, custom cursors, magnetic UI — micro-interactions that make the whole thing feel alive under the hand.</p></div>
+    <div class="cap rise"><div class="n">05</div><h3>Performance</h3><p>Immersive doesn't mean heavy. Adaptive quality tiers keep it buttery on a flagship and on a five-year-old laptop alike.</p></div>
+    <div class="cap rise"><div class="n">06</div><h3>Launch &amp; ship</h3><p>Global hosting, custom domain, analytics, HTTPS — handed over live, fast, and ready to grow.</p></div>
+  </div>
+</div></section>
+
+<section class="approach" id="approach"><div class="wrap">
+  <div class="sec-head rise"><h2>How a world gets built</h2><div class="lab">Approach</div></div>
+  <div class="steps">
+    <div class="step rise"><div class="i">01</div><h3>Immerse</h3><p>We learn the brand's universe — its story, its feeling, the world it wants to live in.</p></div>
+    <div class="step rise"><div class="i">02</div><h3>Art-direct</h3><p>Palette, typography, imagery and motion language. Every world of ours looks like nothing else.</p></div>
+    <div class="step rise"><div class="i">03</div><h3>Build</h3><p>Real craft — WebGL, scroll, sound, interaction — shipped as clean, fast, self-contained code.</p></div>
+    <div class="step rise"><div class="i">04</div><h3>Launch</h3><p>Live on your domain in weeks, measured and tuned. Global, in English, paid in USDC.</p></div>
+  </div>
+</div></section>
+
+<section class="cta" id="contact"><div class="bg"></div><div class="ov"></div>
+  <div class="in">
+    <span class="eyebrow">Limited engagements · 2026</span>
+    <h2>Let's build<br>your <span class="grad">world.</span></h2>
+    <p class="sub">Tell us the brand and the feeling. We'll come back with the universe it could live in.</p>
+    <span class="magnet"><a href="mailto:hello@nyxel.space?subject=A%20new%20world%20with%20NYXEL" id="mag">Start a project</a></span>
+    <div class="contact">
+      <a href="mailto:hello@nyxel.space">hello@nyxel.space</a>
+      <a href="https://x.com" target="_blank" rel="noopener">X — build-in-public</a>
+    </div>
   </div>
 </section>
 
-<footer>
-  <div class="wrap" style="display:flex;justify-content:space-between;width:100%;flex-wrap:wrap;gap:16px">
-    <span>© 2026 NYXEL — immersive web experiences</span>
-    <span><a href="#work" data-h>Work</a> · <a href="https://x.com" target="_blank" data-h>X</a> · <a href="mailto:hello@nyxel.space" data-h>Email</a></span>
+<footer><div class="wrap"><div class="fin">
+  <div class="fb">
+    <svg width="26" height="26" viewBox="0 0 40 40"><defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><g transform="rotate(-22 20 20)"><ellipse cx="20" cy="20" rx="18" ry="7" fill="none" stroke="url(#g2)" stroke-width="1.6"/></g><circle cx="20" cy="20" r="4.6" fill="url(#g2)"/><circle cx="35" cy="13" r="2.3" fill="#eaf0ff"/></svg>
+    NYXEL
   </div>
-</footer>
+  <div class="fs">nyxel.space · 3D · WEB3 · AI · USDC</div>
+  <div class="fs">© 2026 NYXEL Studio</div>
+</div></div></footer>
 
 <script>
-/* ===== custom cursor ===== */
-(function(){
-  const cur=document.getElementById('cursor');
-  const xTo=gsap.quickTo(cur,"x",{duration:.4,ease:"power3"}), yTo=gsap.quickTo(cur,"y",{duration:.4,ease:"power3"});
-  addEventListener('mousemove',e=>{xTo(e.clientX);yTo(e.clientY)});
-  document.querySelectorAll('[data-h]').forEach(el=>{
-    el.addEventListener('mouseenter',()=>cur.classList.add('big'));
-    el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
-  });
-})();
-
-/* ===== magnetic CTA ===== */
-(function(){
-  const cta=document.querySelector('.nav-cta'); if(!cta)return;
-  cta.addEventListener('mousemove',e=>{const r=cta.getBoundingClientRect();gsap.to(cta,{x:(e.clientX-r.left-r.width/2)*.4,y:(e.clientY-r.top-r.height/2)*.6,duration:.4,ease:"power3"})});
-  cta.addEventListener('mouseleave',()=>gsap.to(cta,{x:0,y:0,duration:.6,ease:"elastic.out(1,.4)"}));
-})();
-
-/* ===== Lenis smooth scroll + GSAP ===== */
 gsap.registerPlugin(ScrollTrigger);
-const lenis=new Lenis({lerp:.09,wheelMultiplier:1});
-lenis.on('scroll',ScrollTrigger.update);
-gsap.ticker.add(t=>lenis.raf(t*1000));
-gsap.ticker.lagSmoothing(0);
+const LOW=(navigator.hardwareConcurrency||8)<=4;
+const lenis=new Lenis({lerp:LOW?.12:.09}); lenis.on('scroll',ScrollTrigger.update); gsap.ticker.add(t=>lenis.raf(t*1000)); gsap.ticker.lagSmoothing(0);
 
-/* ===== hero intro ===== */
-window.addEventListener('load',()=>{
-  const tl=gsap.timeline({defaults:{ease:"power4.out"}});
-  tl.from("#kick",{yPercent:120,opacity:0,duration:.8})
-    .from("#hero-h .line span",{yPercent:120,duration:1.1,stagger:.12},"-=.4")
-    .from("#hero-sub",{y:24,opacity:0,duration:.9},"-=.7");
-});
+/* split manifesto words */
+(function(){const el=document.getElementById('mani');el.innerHTML=el.textContent.split(/(\s+)/).map(w=>w.trim()?`<span class="w">${w}</span>`:w).join('');})();
 
-/* ===== manifesto: word-by-word reveal on scroll ===== */
+ScrollTrigger.create({start:'top -60',onUpdate:s=>document.querySelector('header').classList.toggle('scrolled',s.scroll()>60)});
+
+/* canvas starfield — light, parallax on scroll + cursor */
 (function(){
-  const el=document.getElementById('manifesto');
-  const html=el.innerHTML;
-  // wrap plain words in .w, keep the accent span
-  const tmp=document.createElement('div'); tmp.innerHTML=html;
-  const out=[];
-  tmp.childNodes.forEach(node=>{
-    if(node.nodeType===3){ node.textContent.split(/(\s+)/).forEach(t=>{ if(t.trim()) out.push('<span class="w">'+t+'</span>'); else out.push(t); }); }
-    else { out.push('<span class="w accent">'+node.textContent+'</span>'); }
-  });
-  el.innerHTML=out.join('');
-  gsap.to(el.querySelectorAll('.w'),{
-    opacity:1, stagger:.08, ease:"none",
-    scrollTrigger:{trigger:el,start:"top 78%",end:"top 30%",scrub:1}
-  });
-})();
-
-/* ===== generic rise-in reveals ===== */
-gsap.utils.toArray('.rise, .wk').forEach(el=>{
-  gsap.from(el,{y:60,opacity:0,duration:1,ease:"power3.out",
-    scrollTrigger:{trigger:el,start:"top 88%",once:true}});
-});
-
-/* ===== contact headline scrub ===== */
-gsap.from("#contact-h",{scale:.9,opacity:.2,ease:"none",
-  scrollTrigger:{trigger:"#contact",start:"top 90%",end:"top 40%",scrub:1}});
-
-/* ===== WebGL background (shader gradient + fresnel core, scroll-linked) ===== */
-(function(){
-  if(!window.THREE)return;
-  const canvas=document.getElementById('gl'); let renderer;
-  try{renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});}catch(e){return}
-  const LOW=(navigator.hardwareConcurrency||8)<=4;   // perf-mode for weak machines
-  renderer.setPixelRatio(Math.min(devicePixelRatio,LOW?1.2:1.6));
-  let w=innerWidth,h=innerHeight; renderer.setSize(w,h);
-  const scene=new THREE.Scene(), camera=new THREE.PerspectiveCamera(56,w/h,.1,100); camera.position.z=5.4;
-
-  const bgU={t:{value:0},res:{value:new THREE.Vector2(w,h)}};
-  const bgScene=new THREE.Scene(), bgCam=new THREE.Camera();
-  bgScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),new THREE.ShaderMaterial({uniforms:bgU,depthWrite:false,depthTest:false,
-    vertexShader:"varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position,1.0);}",
-    fragmentShader:"precision highp float;varying vec2 vUv;uniform float t;uniform vec2 res;void main(){vec2 uv=vUv;uv.x*=res.x/res.y;float n=sin(uv.x*2.1+t*.22)*.5+cos(uv.y*2.5-t*.18)*.5;n+=sin((uv.x+uv.y)*3.2+t*.3)*.35;vec3 c=mix(vec3(.09,.05,.22),vec3(.02,.12,.18),clamp(n*.5+.5,0.,1.));float d=length(vUv-.5);c*=mix(1.,.16,smoothstep(.15,.95,d));c+=.01;gl_FragColor=vec4(c,1.);}"})));
-
-  const fMat=new THREE.ShaderMaterial({uniforms:{cA:{value:new THREE.Color(0x241b58)},cB:{value:new THREE.Color(0xa9b8ff)}},transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,
-    vertexShader:"varying vec3 vN;varying vec3 vV;void main(){vN=normalize(normalMatrix*normal);vec4 mv=modelViewMatrix*vec4(position,1.);vV=normalize(-mv.xyz);gl_Position=projectionMatrix*mv;}",
-    fragmentShader:"varying vec3 vN;varying vec3 vV;uniform vec3 cA;uniform vec3 cB;void main(){float f=pow(1.-max(dot(vN,vV),0.),2.4);gl_FragColor=vec4(mix(cA,cB,f),f*.8+.05);}"});
-  const detail=LOW?1:3;
-  const geo=new THREE.IcosahedronGeometry(1.7,detail);
-  const base=Float32Array.from(geo.attributes.position.array);
-  const grp=new THREE.Group(); scene.add(grp);
-  const core=new THREE.Mesh(geo,fMat); grp.add(core);
-  const wire=new THREE.Mesh(new THREE.IcosahedronGeometry(1.95,1),new THREE.MeshBasicMaterial({color:0x7c5cff,wireframe:true,transparent:true,opacity:.13})); grp.add(wire);
-
-  const PC=LOW?280:900,pg=new THREE.BufferGeometry(),pos=new Float32Array(PC*3);
-  for(let i=0;i<PC*3;i++)pos[i]=(Math.random()-.5)*22;
-  pg.setAttribute('position',new THREE.BufferAttribute(pos,3));
-  const pts=new THREE.Points(pg,new THREE.PointsMaterial({color:0x8ea2ff,size:.025,transparent:true,opacity:.6,blending:THREE.AdditiveBlending,depthWrite:false})); scene.add(pts);
-
-  let mx=0,my=0; addEventListener('mousemove',e=>{mx=e.clientX/w-.5;my=e.clientY/h-.5});
-  addEventListener('resize',()=>{w=innerWidth;h=innerHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);bgU.res.value.set(w,h)});
-
-  // scroll-link: push deeper + spin + shift color as you scroll
-  const sc={z:0,rot:0,amp:.17};
-  gsap.to(sc,{z:2.2,rot:Math.PI*1.4,ease:"none",scrollTrigger:{trigger:document.body,start:"top top",end:"bottom bottom",scrub:1}});
-  gsap.to(fMat.uniforms.cB.value,{r:.13,g:.83,b:.93,ease:"none",scrollTrigger:{trigger:"#contact",start:"top 80%",end:"top 20%",scrub:1}});
-
-  const posAttr=geo.attributes.position, clock=new THREE.Clock();
-  function loop(){
-    const t=clock.getElapsedTime(); bgU.t.value=t;
-    if(!LOW){ // morphing "breathing" blob (CPU vertex displacement)
-      for(let i=0;i<posAttr.count;i++){const ix=i*3,x=base[ix],y=base[ix+1],z=base[ix+2];
-        const n=Math.sin(x*1.4+t*.7)*Math.sin(y*1.4+t*.55)*Math.sin(z*1.4+t*.45);
-        const s=1+n*sc.amp; posAttr.array[ix]=x*s;posAttr.array[ix+1]=y*s;posAttr.array[ix+2]=z*s;}
-      posAttr.needsUpdate=true; geo.computeVertexNormals();
+  const cv=document.getElementById('stars'); if(!cv)return; const ctx=cv.getContext('2d');
+  const dpr=Math.min(devicePixelRatio||1,LOW?1:2); let w,h;
+  function resize(){w=cv.width=innerWidth*dpr;h=cv.height=innerHeight*dpr;cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';}
+  resize(); addEventListener('resize',resize);
+  const N=LOW?80:230, stars=[];
+  for(let i=0;i<N;i++)stars.push({x:Math.random(),y:Math.random(),z:Math.random()*.85+.15,r:Math.random()*1.3+.35,tw:Math.random()*6.28});
+  let sy=0; lenis.on('scroll',e=>{sy=e.animatedScroll||e.scroll||sy;});
+  let mx=0,my=0,tmx=0,tmy=0; addEventListener('mousemove',e=>{tmx=e.clientX/innerWidth-.5;tmy=e.clientY/innerHeight-.5;},{passive:true});
+  function draw(time){
+    ctx.clearRect(0,0,w,h); mx+=(tmx-mx)*.04; my+=(tmy-my)*.04;
+    for(const s of stars){
+      let px=s.x*w + mx*46*s.z*dpr;
+      let py=(s.y*h - sy*0.12*s.z*dpr) % h; if(py<0)py+=h;
+      px=(px%w+w)%w;
+      const tw=LOW?1:(.55+.45*Math.sin(time*.0018+s.tw));
+      ctx.globalAlpha=Math.min(1,(.3+.7*s.z)*tw);
+      ctx.beginPath(); ctx.arc(px,py,s.r*s.z*dpr,0,6.283);
+      ctx.fillStyle=s.z>.75?'#dbe2ff':'#93a4e6'; ctx.fill();
     }
-    core.rotation.y+=.0032; core.rotation.x+=.0018; core.rotation.z=sc.rot;
-    wire.rotation.copy(core.rotation); wire.rotation.z=-sc.rot*.6;
-    grp.position.z=-sc.z; pts.rotation.y+=.0003;
-    grp.rotation.y+=((mx*.5)-grp.rotation.y)*.04; grp.rotation.x+=((my*.3)-grp.rotation.x)*.04;
-    renderer.autoClear=false; renderer.clear();
-    renderer.render(bgScene,bgCam); renderer.render(scene,camera);
-    requestAnimationFrame(loop);
+    ctx.globalAlpha=1; requestAnimationFrame(draw);
   }
-  loop();
+  requestAnimationFrame(draw);
 })();
+
+/* intro (robust) */
+function nIntro(){
+  if(window.__ni)return; window.__ni=1;
+  gsap.timeline()
+    .to('#load .lw',{opacity:1,duration:.7,ease:'power2.out'})
+    .to('#load .lb',{width:'min(340px,52vw)',duration:.9,ease:'power2.inOut'},'-=.35')
+    .to('#load',{yPercent:-100,duration:.8,ease:'power4.inOut'},'+=.3')
+    .add(()=>{const l=document.getElementById('load');if(l)l.style.display='none';})
+    .from('.hero-bg .img',{scale:1.18,duration:1.5,ease:'power3.out'},'-=.7')
+    .to('.hero-in .eyebrow',{opacity:1,duration:.7},'-=1')
+    .to('.hero-in h1 .l span',{opacity:1,y:0,duration:1,stagger:.14,ease:'power4.out'},'-=.6')
+    .to('.hero-in .sub',{opacity:1,duration:.7},'-=.5')
+    .to('.hero-cta',{opacity:1,duration:.6},'-=.4')
+    .to('.cue',{opacity:1,duration:.6},'-=.3');
+}
+function nReveal(){const l=document.getElementById('load');if(l)l.style.display='none';gsap.set(['.hero-in .eyebrow','.hero-in .sub','.hero-cta','.cue'],{opacity:1});gsap.set('.hero-in h1 .l span',{opacity:1,y:0});}
+if(document.readyState==='complete') nIntro(); else window.addEventListener('load',nIntro);
+setTimeout(()=>{const l=document.getElementById('load'); if(l&&getComputedStyle(l).display!=='none') nReveal();},4200);
+
+/* hero parallax */
+gsap.to('.hero-in',{yPercent:-16,opacity:.2,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+gsap.to('.hero-bg',{yPercent:14,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+
+/* manifesto words */
+gsap.to('.manifesto .w',{opacity:1,stagger:.14,ease:'none',scrollTrigger:{trigger:'.manifesto',start:'top 70%',end:'bottom 76%',scrub:.6}});
+
+/* generic rise reveals */
+gsap.utils.toArray('.rise').forEach(el=>gsap.from(el,{y:56,opacity:0,duration:1,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',once:true}}));
+
+/* cta */
+gsap.fromTo('.cta .bg',{scale:1.15,yPercent:-6},{scale:1,yPercent:6,ease:'none',scrollTrigger:{trigger:'.cta',start:'top bottom',end:'bottom top',scrub:true}});
+gsap.from('.cta .in > *',{y:50,opacity:0,duration:1,stagger:.1,ease:'power4.out',scrollTrigger:{trigger:'.cta',start:'top 62%',once:true}});
+
+/* magnetic button */
+(function(){const m=document.getElementById('mag'),w=m.parentElement;
+  w.addEventListener('mousemove',e=>{const r=w.getBoundingClientRect();gsap.to(m,{x:(e.clientX-r.left-r.width/2)*.4,y:(e.clientY-r.top-r.height/2)*.6,duration:.5,ease:'power3.out'});});
+  w.addEventListener('mouseleave',()=>gsap.to(m,{x:0,y:0,duration:.6,ease:'elastic.out(1,.4)'}));})();
+
+/* magnetic work cards (subtle tilt) */
+gsap.utils.toArray('.wk:not(.soon)').forEach(card=>{
+  card.addEventListener('mousemove',e=>{const r=card.getBoundingClientRect();const rx=(e.clientY-r.top-r.height/2)/r.height*-5;const ry=(e.clientX-r.left-r.width/2)/r.width*5;gsap.to(card,{rotateX:rx,rotateY:ry,transformPerspective:900,duration:.5,ease:'power2.out'});});
+  card.addEventListener('mouseleave',()=>gsap.to(card,{rotateX:0,rotateY:0,duration:.6,ease:'power2.out'}));
+});
 </script>
 </body>
 </html>
