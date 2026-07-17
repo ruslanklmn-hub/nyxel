@@ -328,28 +328,46 @@ gsap.from('.magnet',{y:30,opacity:0,duration:.9,delay:.2,ease:'power2.out',scrol
   wrap.addEventListener('mouseleave',()=>gsap.to(m,{x:0,y:0,duration:.6,ease:'elastic.out(1,.4)'}));
 })();
 
-/* WebAudio ambient — synthesised, plays only on user toggle */
+/* WebAudio ambient — generative pad + soft bells (musical, not a drone); plays only on user toggle */
 (function(){
   const btn=document.getElementById('sound'), txt=document.getElementById('stxt');
   let AC,master,started=false;
   function build(){
     AC=new (window.AudioContext||window.webkitAudioContext)();
-    master=AC.createGain();master.gain.value=0;master.connect(AC.destination);
-    const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=760;lp.Q.value=.6;lp.connect(master);
-    const freqs=[110,164.81,220,329.63];
-    freqs.forEach((f,i)=>{
-      const o=AC.createOscillator();o.type=i%2?'sine':'triangle';o.frequency.value=f;
-      const g=AC.createGain();g.gain.value=(i===0?.6:.24)/freqs.length;o.connect(g);g.connect(lp);o.start();
-      const lfo=AC.createOscillator();lfo.frequency.value=.028+i*.015;const lg=AC.createGain();lg.gain.value=3.2;lfo.connect(lg);lg.connect(o.detune);lfo.start();
+    master=AC.createGain(); master.gain.value=0; master.connect(AC.destination);
+    // reverb-like space (feedback delay)
+    const delay=AC.createDelay(1.0); delay.delayTime.value=0.42;
+    const fb=AC.createGain(); fb.gain.value=0.36; const wet=AC.createGain(); wet.gain.value=0.45;
+    delay.connect(fb); fb.connect(delay); delay.connect(wet); wet.connect(master);
+    // warm breathing pad — Am9 in a mid register (no sub-bass hum)
+    const padLP=AC.createBiquadFilter(); padLP.type='lowpass'; padLP.frequency.value=1100; padLP.Q.value=0.4; padLP.connect(master);
+    const sweep=AC.createOscillator(); sweep.frequency.value=0.03; const sweepG=AC.createGain(); sweepG.gain.value=380; sweep.connect(sweepG); sweepG.connect(padLP.frequency); sweep.start();
+    [220.00,261.63,329.63,392.00,493.88].forEach((f,i)=>{
+      const base=(i===0?0.08:0.055);
+      const g=AC.createGain(); g.gain.value=base; g.connect(padLP);
+      [-6,6].forEach((det,j)=>{ const o=AC.createOscillator(); o.type=j?'sine':'triangle'; o.frequency.value=f; o.detune.value=det; o.connect(g); o.start(); });
+      const bl=AC.createOscillator(); bl.frequency.value=0.05+i*0.017; const blg=AC.createGain(); blg.gain.value=base*0.55; bl.connect(blg); blg.connect(g.gain); bl.start(); // breathing
     });
-    // slow filter sweep for movement
-    const flfo=AC.createOscillator();flfo.frequency.value=.05;const fg=AC.createGain();fg.gain.value=180;flfo.connect(fg);fg.connect(lp.frequency);flfo.start();
+    // airy shimmer
+    const sh=AC.createOscillator(); sh.type='sine'; sh.frequency.value=1046.5; const shg=AC.createGain(); shg.gain.value=0.012; sh.connect(shg); shg.connect(master); sh.start();
+    const sht=AC.createOscillator(); sht.frequency.value=0.2; const shtg=AC.createGain(); shtg.gain.value=0.01; sht.connect(shtg); shtg.connect(shg.gain); sht.start();
+    // generative soft bells (A-minor pentatonic) through the space
+    const notes=[440.00,523.25,587.33,659.25,783.99,880.00];
+    (function bell(){
+      const f=notes[Math.floor(Math.random()*notes.length)], t=AC.currentTime;
+      const o=AC.createOscillator(); o.type='sine'; o.frequency.value=f;
+      const ov=AC.createOscillator(); ov.type='sine'; ov.frequency.value=f*2;
+      const g=AC.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.085,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+2.6);
+      const ovg=AC.createGain(); ovg.gain.value=0.28; ov.connect(ovg); ovg.connect(g); o.connect(g); g.connect(master); g.connect(delay);
+      o.start(t); ov.start(t); o.stop(t+2.8); ov.stop(t+2.8);
+      setTimeout(bell, 2600+Math.random()*4200);
+    })();
     started=true;
   }
   btn.addEventListener('click',()=>{
     try{ if(!started)build(); if(AC.state==='suspended')AC.resume();
-      const on=master.gain.value<.001;
-      gsap.to(master.gain,{value:on?.11:0,duration:on?2:.8,ease:'sine.inOut'});
+      const on=master.gain.value<0.001;
+      gsap.to(master.gain,{value:on?0.15:0,duration:on?2.4:0.7,ease:'sine.inOut'});
       btn.classList.toggle('on',on); txt.textContent=on?'Ambience · On':'Ambience';
     }catch(e){txt.textContent='—';}
   });
